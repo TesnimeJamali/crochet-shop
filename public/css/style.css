@@ -1,0 +1,6 @@
+body {
+    background-image: url('../image/voila.png'); /* Your small image */
+    background-repeat: repeat;          /* Repeat both x and y */
+    background-size: cover; /* Ensure the image covers the entire background */
+    background-position: top left;      /* Start repeating from top-left */
+}
