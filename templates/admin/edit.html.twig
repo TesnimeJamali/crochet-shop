@@ -1,11 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Add Product{% endblock %}
+{% block title %}
+    {{ product is defined ? 'Edit Product' : 'Add Product' }}
+{% endblock %}
 
 {% block body %}
-    <h1>{{ product is defined ? 'Edit' : 'Add' }} Product</h1>
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-primary mt-2">{{ product is defined ? 'Update' : 'Create' }}</button>
-    {{ form_end(form) }}
+    <div class="container mt-4">
+        <h1 class="mb-4">{{ product is defined ? 'Edit' : 'Add' }} Product</h1>
+
+        {# ✅ Display current image if editing and image exists #}
+        {% if product is defined and product.imageName %}
+            <div class="mb-3">
+                <label>Image actuelle :</label><br>
+                <img src="{{ asset('uploads/products/' ~ product.imageName) }}" alt="Image produit" width="200">
+            </div>
+        {% endif %}
+
+        {{ form_start(form, { attr: { enctype: 'multipart/form-data' } }) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary mt-3">
+            {{ product is defined ? 'Update' : 'Create' }}
+        </button>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

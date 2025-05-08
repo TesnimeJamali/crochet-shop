@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Product;
@@ -10,8 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
-#[Route('/admin/products')]
+#[Route('/admin')]
 class AdminController extends AbstractController
 {
     #[Route('/', name: 'admin_products')]
@@ -29,6 +29,7 @@ class AdminController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            // Handle file upload and setting image path
             $em->persist($product);
             $em->flush();
             return $this->redirectToRoute('admin_products');
@@ -41,15 +42,22 @@ class AdminController extends AbstractController
     public function edit(Product $product, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(ProductType::class, $product);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($product);
             $em->flush();
+
+            $this->addFlash('success', 'Produit modifié avec succès.');
             return $this->redirectToRoute('admin_products');
         }
 
-        return $this->render('admin/edit.html.twig', ['form' => $form->createView(), 'product' => $product]);
+        return $this->render('admin/edit.html.twig', [
+            'form' => $form->createView(),
+            'product' => $product,
+        ]);
     }
+
 
     #[Route('/{id}/delete', name: 'admin_product_delete')]
     public function delete(Product $product, EntityManagerInterface $em): Response

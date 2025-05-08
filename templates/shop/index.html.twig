@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Shop{% endblock %}
+{% block title %}Welcome{% endblock %}
 
 {% block body %}
     <h1>Our Crochet Products</h1>
@@ -13,7 +13,8 @@
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">{{ product.description|slice(0, 100) ~ '...' }}</p>
                         <p class="card-text"><strong>{{ product.price }} €</strong></p>
-                        <a href="#" class="btn btn-info">Buy</a>
+                        <a href="{{ path('product_details', {'id': product.id}) }}" class="btn btn-info">Details</a>
+                        <a href="#" class="btn btn-info">Add to Cart</a>
                     </div>
                 </div>
             </div>
