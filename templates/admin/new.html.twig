@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/detail.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
 
+{% endblock %}
 {% block title %}Add Product{% endblock %}
 
 {% block body %}
     <h1>{{ product is defined ? 'Edit' : 'Add' }} Product</h1>
     {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn btn-primary mt-2">{{ product is defined ? 'Update' : 'Create' }}</button>
+    <button class="btn btn-add mt-2">{{ product is defined ? 'Update' : 'Create' }}</button>
     {{ form_end(form) }}
 {% endblock %}

@@ -1,0 +1,65 @@
+/* Product Detail Page Styles */
+.container.mt-4 {
+    padding: 0.5rem 0;
+}
+
+/* Image Section */
+.col-md-6 img {
+    border-radius: 25px; /* More noticeable rounding */
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    max-height: 500px;
+    max-width: 500px;
+    object-fit: cover;
+}
+
+.col-md-6 img:hover {
+    transform: scale(1.02);
+}
+
+/* Product Info Section */
+.col-md-6 h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.col-md-6 .lead {
+    font-size: 1.8rem;
+    color: #d32f2f; /* Red color for price */
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.col-md-6 p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .col-md-6 {
+        margin-bottom: 2rem;
+    }
+
+    .col-md-6 h1 {
+        font-size: 2rem;
+    }
+
+    .col-md-6 .lead {
+        font-size: 1.5rem;
+    }
+}
+
+/* Default Image Fallback Style */
+img[src*="default_product_image"] {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border: 1px dashed #dee2e6;
+}

@@ -7,8 +7,12 @@
         {% for product in products %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
-                    <img src="{{ asset('uploads/products/' ~ product.image) }}" class="card-img-top" alt="{{ product.name }}">
-                    <div class="card-body">
+                    {% if product is defined and product.imageName %}
+                        <div class="mb-3">
+                            <label>Image actuelle :</label><br>
+                            <img src="{{ asset('uploads/products/' ~ product.imageName) }}" alt="Image produit" width="200">
+                        </div>
+                    {% endif %}                    <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">{{ product.description|length > 100 ? product.description|slice(0, 100) ~ '...' : product.description }}</p>
                         <p class="card-text"><strong>{{ product.price }} €</strong></p>

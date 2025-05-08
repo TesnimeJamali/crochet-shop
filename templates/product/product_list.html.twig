@@ -2,7 +2,9 @@
     {% for product in products %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                <img src="{{ asset('uploads/products/' ~ product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                {% if product.imageFile %}
+                    <img src="{{ vich_uploader_asset(product, 'imageFile') }}" alt="Product Image" style="max-width: 200px;">
+                {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5>
                     <p class="card-text">{{ product.description|length > 100 ? product.description|slice(0, 100) ~ '...' : product.description }}</p>

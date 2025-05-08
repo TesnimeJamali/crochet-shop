@@ -1,0 +1,62 @@
+.product-card {
+    transition: transform 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+    height: 300px;
+    object-fit: cover;
+}
+
+.custom-cart-btn {
+    background-color: #fdb2b2;
+    color: white;
+    border: 1px solid #fdb2b2;
+    transition: all 0.3s ease;
+}
+.custom-cart-btn:hover {
+    background-color: #d58686;
+    transform: translateY(-2px);
+    color: white;
+
+}
+.btn-delete {
+    background-color: #ffd0b6;
+    color: white;
+    border: 1px solid #ffd0b6;
+    transition: all 0.3s ease;
+}
+.btn-delete:hover {
+    background-color: #eca57a;
+    transform: translateY(-2px);
+    color: white;
+}
+.btn-edit {
+    background-color: #fbd57e;
+    color: white;
+    border: 1px solid #fbd57e;
+    transition: all 0.3s ease;
+}
+.btn-edit:hover {
+    background-color: #ddbc6b;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-add {
+    background-color: #fdb2b2;
+    color: white;
+    border: 1px solid #fdb2b2;
+    transition: all 0.3s ease;
+}
+.btn-add:hover {
+    background-color: #ca7b7b;
+    transform: translateY(-2px);
+    color: white;
+}
+/* custom.css */
