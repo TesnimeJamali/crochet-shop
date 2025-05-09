@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Upload Carousel Image{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Add Image to Carousel</h1>
+
+        {{ form_start(form, { attr: { enctype: 'multipart/form-data' } }) }}
+        <div class="mb-3">
+            {{ form_row(form.imageFile) }}
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+        {{ form_end(form) }}
+
+        <hr>
+
+        <h2 class="mt-4">Current Carousel Images</h2>
+        <div class="row">
+            {% for image in carouselImages %}
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        {% if image.imageName %}
+                            <img src="{{ asset('uploads/carousel/' ~ image.imageName) }}" class="card-img-top" alt="Carousel image">
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <form method="post" action="{{ path('admin_carousel_delete', {'id': image.id}) }}" onsubmit="return confirm('Delete this image?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ image.id) }}">
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-muted">No images uploaded yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

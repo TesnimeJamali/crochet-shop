@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ImageCarousel index{% endblock %}
+
+{% block body %}
+    <h1>ImageCarousel index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ImageName</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for image_carousel in image_carousels %}
+            <tr>
+                <td>{{ image_carousel.id }}</td>
+                <td>{{ image_carousel.imageName }}</td>
+                <td>{{ image_carousel.updatedAt ? image_carousel.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_image_carousel_show', {'id': image_carousel.id}) }}">show</a>
+                    <a href="{{ path('app_image_carousel_edit', {'id': image_carousel.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_image_carousel_new') }}">Create new</a>
+{% endblock %}

@@ -1,14 +1,18 @@
 <?php
 namespace App\Controller;
-
+use App\Controller\ImageCarouselController;
 use App\Entity\Product;
+use App\Entity\ImageCarousel;
 use App\Form\ProductType;
+use App\Form\ImageCarouselForm;
+use App\Form\ImageCarouselTypeForm;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\ImageCarouselRepository;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[Route('/admin')]
@@ -65,5 +69,48 @@ class AdminController extends AbstractController
         $em->remove($product);
         $em->flush();
         return $this->redirectToRoute('admin_products');
+    }
+    #[Route('/carousel/upload', name: 'admin_carousel_upload')]
+    public function uploadCarousel(Request $request, EntityManagerInterface $em, ImageCarouselRepository $repo): Response
+    {
+        $carouselImage = new ImageCarousel();
+        $form = $this->createForm(ImageCarouselTypeForm::class, $carouselImage);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($carouselImage);
+            $em->flush();
+            $this->addFlash('success', 'Image ajoutée au carrousel.');
+            return $this->redirectToRoute('admin_carousel_upload');
+        }
+
+        // ✅ Fetch all existing carousel images from DB
+        $carouselImages = $repo->findAll();
+
+        return $this->render('admin/carousel_upload.html.twig', [
+            'form' => $form->createView(),
+            'carouselImages' => $carouselImages, // ✅ Pass list
+        ]);
+    }
+    #[Route('/carousel/{id}/delete', name: 'admin_carousel_delete', methods: ['POST'])]
+    public function deleteCarouselImage(
+        ImageCarousel $image,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        if ($this->isCsrfTokenValid('delete' . $image->getId(), $request->request->get('_token'))) {
+            // Optional: remove the image file from the server
+            $imagePath = $this->getParameter('carousel_directory') . '/' . $image->getImageName();
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+
+            $em->remove($image);
+            $em->flush();
+
+            $this->addFlash('success', 'Image supprimée du carrousel.');
+        }
+
+        return $this->redirectToRoute('admin_carousel_upload');
     }
 }

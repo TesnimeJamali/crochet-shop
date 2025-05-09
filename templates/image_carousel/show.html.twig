@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ImageCarousel{% endblock %}
+
+{% block body %}
+    <h1>ImageCarousel</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ image_carousel.id }}</td>
+            </tr>
+            <tr>
+                <th>ImageName</th>
+                <td>{{ image_carousel.imageName }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ image_carousel.updatedAt ? image_carousel.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_image_carousel_index') }}">back to list</a>
+
+    <a href="{{ path('app_image_carousel_edit', {'id': image_carousel.id}) }}">edit</a>
+
+    {{ include('image_carousel/_delete_form.html.twig') }}
+{% endblock %}

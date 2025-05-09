@@ -6,6 +6,7 @@
 # config/services.yaml
 parameters:
     products_directory: '%kernel.project_dir%/public/uploads/products'
+    carousel_directory: '%kernel.project_dir%/public/uploads/carousel'
 
 services:
     # default configuration for services in *this* file
