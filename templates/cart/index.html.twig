@@ -39,13 +39,12 @@
                 <td class="text-center">{{ (item.produit.price)*(item.quantite) }}</td>
                 <td>
                     <a href="{{ path('add', {id: item.produit.id}) }}" class="btn btn-success"><i
-                                class="bi bi-cart-dash"></i></a>
-                </td>
-                <td>
+                                class="bi bi-cart-plus"></i></a>
+                    <a href="{{ path('remove', {id: item.produit.id}) }}" class="btn btn-warning"><i class="bi bi-cart-dash"></i></a>
                     <a href="{{ path('delete', {id: item.produit.id}) }}" class="btn btn-danger"><i
                                 class="bi bi-cart-x"></i></a>
-
                 </td>
+
 
             </tr>
 
