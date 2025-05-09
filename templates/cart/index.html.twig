@@ -38,7 +38,15 @@
                 </td>
                 <td class="text-center">{{ (item.produit.price)*(item.quantite) }}</td>
                 <td>
+                    <a href="{{ path('add', {id: item.produit.id}) }}" class="btn btn-success"><i
+                                class="bi bi-cart-dash"></i></a>
                 </td>
+                <td>
+                    <a href="{{ path('delete', {id: item.produit.id}) }}" class="btn btn-danger"><i
+                                class="bi bi-cart-x"></i></a>
+
+                </td>
+
             </tr>
 
         {% else %}
@@ -51,6 +59,7 @@
         <tfoot>
         <td colspan="3">Total</td>
         <td class="text-center">{{ total }} </td>
+        <td></td>
 
         </tfoot>
         </thead>

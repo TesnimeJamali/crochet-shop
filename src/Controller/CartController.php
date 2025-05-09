@@ -40,8 +40,25 @@ final class CartController extends AbstractController
             $panier[$id] = 1;
         }
         $session->set('panier', $panier);
-        return $this->redirectToRoute('app_cart',['id'=>$id]);
+        return $this->redirectToRoute('app_cart');
 
     }
+    #[Route('/delete/{id}', name: 'delete')]
+    public function delete(Product $product, SessionInterface $session): Response
+    {
+        $id = $product->getId();
+        $panier = $session->get('panier', []);
+        if (array_key_exists($id, $panier)) {
+            unset($panier[$id]);
+            $session->set('panier', $panier);
+            return $this->redirectToRoute('app_cart');
+        } else{
+            $session->set('panier', $panier);
+            return $this->redirectToRoute('app_cart');
+        }
+
+
+    }
+
 
 }
