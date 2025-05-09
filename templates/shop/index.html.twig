@@ -18,7 +18,9 @@
                             <p class="card-text text-muted">{{ product.description|slice(0, 100) ~ '...' }}</p>
                             <p class="card-text text-dark"><strong>{{ product.price }} DT</strong></p>
                             <div class="mt-3">
-                                <span class="btn custom-cart-btn">Add to Cart</span>
+                                <a href="{{ path('add', {'id': product.id}) }}">
+                                    <span class="btn custom-cart-btn">Add to Cart</span>
+                                </a>
                             </div>
                         </div>
                     </div>
