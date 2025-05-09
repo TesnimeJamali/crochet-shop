@@ -4,3 +4,8 @@ body {
     background-size: cover; /* Ensure the image covers the entire background */
     background-position: top left;      /* Start repeating from top-left */
 }
+#flash {
+    transition: opacity 0.5s ease-in-out;
+    border-radius: 0.75rem;
+}
+

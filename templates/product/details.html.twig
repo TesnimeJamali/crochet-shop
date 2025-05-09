@@ -21,7 +21,7 @@
                 <h1>{{ product.name }}</h1>
                 <p class="lead">{{ product.price }} DT</p>
                 <p>{{ product.description }}</p>
-                <a href="#" class="btn custom-cart-btn">Add to Cart</a>
+                <a href="{{ path('add', {'id': product.id}) }}" class="btn custom-cart-btn">Add to Cart</a>
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,7 +31,7 @@ final class CartController extends AbstractController
     }
 
     #[Route('/add/{id}', name: 'add')]
-    public function add(Product $product,SessionInterface $session): Response{
+    public function add(Product $product,SessionInterface $session,Request $request): Response{
         $panier = $session->get('panier', []);
         $id=$product->getId();
         if(isset($panier[$id])){
@@ -40,7 +41,9 @@ final class CartController extends AbstractController
             $panier[$id] = 1;
         }
         $session->set('panier', $panier);
-        return $this->redirectToRoute('app_cart');
+        $this->addFlash('success', sprintf('%s a été ajouté au panier.', $product->getName()));
+        $referer = $request->headers->get('referer');
+        return $this->redirect($referer ?: $this->generateUrl('app_cart'));
 
     }
     #[Route('/delete/{id}', name: 'delete')]
