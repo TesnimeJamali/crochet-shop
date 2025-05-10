@@ -22,7 +22,7 @@
                                 <a href="{{ path('shop_product_details', {'id': item.produit.id}) }}" class="text-decoration-none">
                                     <div class="card h-100 product-card">
                                         {% if item.produit.imageName %}
-                                            <img src="{{ asset('uploads/products/' ~ item.produit.imageName) }}" class="card-img-top" alt="{{ product.name }}">
+                                            <img src="{{ asset('uploads/products/' ~ item.produit.imageName) }}" class="card-img-top" alt="{{ item.produit.name }}">
                                         {% endif %}
                                         <div class="card-body">
                                             <h5 class="card-title text-dark">{{ item.produit.name }}</h5>
