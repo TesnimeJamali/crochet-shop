@@ -15,7 +15,8 @@ class ProductFixtures extends Fixture
             $product->setName('Produit ' . $i);
             $product->setDescription('Description du produit ' . $i);
             $product->setPrice(mt_rand(10, 100));
-            $product->setImage('default.jpg');
+            $product->setImageName('default.jpg');
+            $product->setQuantity(mt_rand(1, 10));
             $manager->persist($product);
         }
 

@@ -16,6 +16,7 @@ final class CartController extends AbstractController
     public function index(SessionInterface $session,ProductRepository $productRepository): Response
     {   $panier = $session->get('panier', []);
         $total=$session->get('total', 0);
+        $info_panier=$session->get('info_panier', []);
         foreach ($panier as $id => $quantite) {
             $product = $productRepository->find($id);
             $info_panier[] = [
@@ -24,7 +25,6 @@ final class CartController extends AbstractController
             ];
             $total = $total + ($product->getPrice()) * $quantite;
         }
-
         return $this->render('cart/index.html.twig', [
             'controller_name' => 'CartController',"info_panier"=>$info_panier,"total"=>$total,
         ]);
