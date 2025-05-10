@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block body %}
+    <h1>My Orders</h1>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-6 mx-auto">
+                <div class="d-flex align-items-center justify-content-evenly">
+                    <button type="button" class="btn btn-danger clickToChange" id="Bpaid">Paid</button>
+                    <button type="button" class="btn btn-primary clickToChange" id="Bpending">Pending</button>
+                    <button type="button" class="btn btn-primary clickToChange" id="Bcanceled">Canceled</button>
+                </div>
+            </div>
+        </div>
+        <div id="Tpaid" style="display: block">
+            {{ render(controller('App\\Controller\\OrderController::filter',{'status':"paid"})) }}
+        </div>
+        <div id="Tpending" style="display: none">
+            {{ render(controller('App\\Controller\\OrderController::filter',{'status':"pending"})) }}
+        </div>
+        <div id="Tcanceled" style="display: none">
+            {{ render(controller('App\\Controller\\OrderController::filter',{'status':"canceled"})) }}
+        </div>
+    </div>
+
+    <a href="{{ path('app_order_new') }}">Create new</a>
+{% endblock %}
+{% block javascripts %}
+<script>
+    const btns= document.querySelectorAll('.clickToChange');
+    const Tpaid = document.getElementById('Tpaid');
+    const Tpending = document.getElementById('Tpending');
+    const Tcanceled = document.getElementById('Tcanceled');
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+
+            if (btn.id === 'Bpaid') {
+                Tpaid.style.display = 'block';
+                Tpending.style.display = 'none';
+                Tcanceled.style.display = 'none';
+
+            } else if (btn.id === 'Bpending') {
+                Tpaid.style.display = 'none';
+                Tpending.style.display = 'block';
+                Tcanceled.style.display = 'none';
+
+            } else if (btn.id === 'Bcanceled'){
+                Tpaid.style.display = 'none';
+                Tpending.style.display = 'none';
+                Tcanceled.style.display = 'block';
+
+            }
+        });
+    });
+</script>
+{% endblock %}

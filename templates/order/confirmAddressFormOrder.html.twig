@@ -1,0 +1,24 @@
+
+{{ form_start(form) }}
+    <pre>
+    {{ form_widget(form.shippingAdress, {
+        'attr': {
+            'class': 'form-control',
+            'rows': 6
+                }
+                }) }}
+        </pre>
+    <button type="button" class="btn btn-warning" id="edit">Edit</button>
+    <button type="submit" class="btn">{{ form_widget(form.next) }}</button>
+{{ form_end(form) }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('edit').addEventListener('click', function () {
+                const addressField = document.querySelector('[name="confirm_address_form[shippingAdress]"]');
+                console.log(addressField);
+                addressField.removeAttribute('readonly');
+                addressField.focus();
+            });
+        });
+    </script>

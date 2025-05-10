@@ -1,0 +1,36 @@
+<h2>{{ status }}</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>CreatedAt</th>
+        <th>Total Amount</th>
+        <th>Total Quantity</th>
+        <th>Phone</th>
+        <th>Payment Method</th>
+        <th>Shipping Adress</th>
+        <th>actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for order in orders %}
+        <tr>
+            <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            <td>{{ order.totalAmount }}</td>
+            <td>{{ order.totalQuantity }}</td>
+            <td>{{ order.phone }}</td>
+            <td>{{ order.paymentMethod }}</td>
+            <td>{{ order.shippingAdress }}</td>
+            <td>
+                <button type="button" class="btn btn-danger"><a href="{{ path('app_order_show', {'id': order.id}) }}">show</a></button>
+            </td>
+        </tr>
+    {% else %}
+
+        <tr>
+            <td colspan="9">
+                    you have no {{ status }} orders
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

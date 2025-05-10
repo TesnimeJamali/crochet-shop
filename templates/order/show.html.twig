@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order{% endblock %}
+
+{% block body %}
+    <h1>Order</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ order.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>TotalAmount</th>
+                <td>{{ order.totalAmount }}</td>
+            </tr>
+            <tr>
+                <th>TotalQuantity</th>
+                <td>{{ order.totalQuantity }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ order.status }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ order.phone }}</td>
+            </tr>
+            <tr>
+                <th>PaymentMethod</th>
+                <td>{{ order.paymentMethod }}</td>
+            </tr>
+            <tr>
+                <th>ShippingAdress</th>
+                <td>{{ order.shippingAdress }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_order_index') }}">back to list</a>
+{% endblock %}

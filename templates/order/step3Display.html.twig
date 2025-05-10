@@ -1,0 +1,44 @@
+<div class="card bg-white shadow-sm mb-4" style="max-width: 24rem;">
+    <div class="card-header bg-white border-bottom pb-2">
+        <h5 class="card-title mb-0 fw-semibold">Order Summary</h5>
+    </div>
+
+    <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+            {% for item in order.items %}
+                <li class="list-group-item bg-white d-flex justify-content-between align-items-center px-3 py-2 border-0 {{ item.highlight|default(false) ? 'fw-bold' : '' }}">
+                    <span class="{{ item.label_class|default('text-secondary') }}">
+                        {{ item.label }}
+                        {% if item.tooltip|default(false) %}
+                            <i class="bi bi-info-circle ms-1 text-muted" data-bs-toggle="tooltip" title="{{ item.tooltip }}"></i>
+                        {% endif %}
+                    </span>
+                    <span class="{{ item.value_class|default('text-dark') }}">{{ item.value }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="bg-light px-3 py-2">
+            <div class="d-flex justify-content-between align-items-center fw-bold fs-5 py-1">
+                <span class="text-dark">Total</span>
+                <span class="text-dark">{{ order.total }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-header bg-white border-bottom pb-2">
+        <h5 class="card-title mb-0 fw-semibold">Shipping Address</h5>
+    </div>
+    <pre>
+        <ul class="list-group list-group-flush">
+
+                <li class="bg-white   px-3 py-2 border-0 {{ item.highlight|default(false) ? 'fw-bold' : '' }}">
+
+                        {{ adress}}
+
+                </li>
+
+        </ul>
+        </pre>
+
+</div>

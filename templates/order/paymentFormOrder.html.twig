@@ -1,0 +1,46 @@
+
+{{ form_start(form) }}
+{% for choice in form.paymentMethod %}
+    <div class="form-check">
+        {{ form_widget(choice) }}
+        {{ form_label(choice) }}
+        {% if loop.first %}
+        <div id="flouci-payment-form" class="payment-detail-form">
+            <h2>Flouci</h2>
+        </div>
+        {% elseif loop.last %}
+            <div id="stripe-payment-form" class="payment-detail-form" style="display: none;">
+                <h3>Stripe</h3>
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}
+
+
+
+
+
+<button type="submit">Pay</button>
+{{ form_end(form) }}
+
+<script>
+    const methodRadios = document.querySelectorAll('input[name="payment_form[paymentMethod]"]');
+    const flouciForm = document.getElementById('flouci-payment-form');
+    const stripeForm = document.getElementById('stripe-payment-form');
+
+    methodRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            console.log(e.target)
+            if (radio.value === 'Flouci') {
+                flouciForm.style.display = 'block';
+                stripeForm.style.display = 'none';
+            } else if (radio.value === 'Stripe') {
+                flouciForm.style.display = 'none';
+                stripeForm.style.display = 'block';
+            } else {
+                flouciForm.style.display = 'none';
+                stripeForm.style.display = 'none';
+            }
+        });
+    });
+</script>
