@@ -51,7 +51,6 @@ class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($product);
             $em->flush();
-
             $this->addFlash('success', 'Produit modifié avec succès.');
             return $this->redirectToRoute('admin_products');
         }

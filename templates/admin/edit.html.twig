@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/detail.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
-
 {% endblock %}
+
 {% block title %}
     {{ product is defined ? 'Edit Product' : 'Add Product' }}
 {% endblock %}
@@ -13,9 +14,8 @@
 {% block body %}
     <div class="container mt-4">
         <h1 class="mb-4">{{ product is defined ? 'Edit' : 'Add' }} Product</h1>
-        {# ... autres champs du formulaire ... #}
+        {{ form_start(form, { attr: { enctype: 'multipart/form-data' } }) }}
 
-        {# Champ image avec taille réduite #}
         <div class="form-group">
             {{ form_label(form.name) }}
             {{ form_widget(form.name) }}
@@ -26,24 +26,32 @@
             {{ form_label(form.price) }}
             {{ form_widget(form.price) }}
             {{ form_errors(form.price) }}
+            {{ form_label(form.quantity) }}
+            {{ form_widget(form.quantity) }}
+            {{ form_errors(form.quantity) }}
 
-            {{ form_label(form.imageFile) }}
-
-            {% if product and product.imageName %}
-                <div class="current-image-preview mb-2" style="width: 150px;">
+            {# Display current image only if product has an image #}
+            {% if product is defined and product.imageName %}
+                <div class="mb-3">
+                    <label>Current Image:</label><br>
                     <img src="{{ vich_uploader_asset(product, 'imageFile') }}"
-                         alt="Current product image"
-                         class="img-fluid"
-                         style="max-width: 100%; height: auto;">
+                         alt="Product image"
+                         class="img-thumbnail"
+                         style="max-width: 200px;">
                 </div>
             {% endif %}
 
-            {{ form_widget(form.imageFile.file) }}
-            {{ form_errors(form.imageFile.file) }}
-
+            {# Image upload field for new or existing product #}
+            <div class="mb-3">
+                {{ form_label(form.imageFile) }}
+                {{ form_widget(form.imageFile) }}
+                {{ form_errors(form.imageFile) }}
+            </div>
         </div>
+
         <button class="btn btn-edit mt-3">
             {{ product is defined ? 'Update' : 'Create' }}
         </button>
+        {{ form_end(form) }}
     </div>
 {% endblock %}

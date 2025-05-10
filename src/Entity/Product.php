@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -46,6 +45,21 @@ class Product
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\Column(type: 'integer')]
+    #[Assert\PositiveOrZero(message: 'Quantity must be zero or positive.')]
+    private ?int $quantity = null;
+
+    public function getQuantity(): ?int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): self
+    {
+        $this->quantity = $quantity;
+        return $this;
+    }
 
     public function getId(): ?int
     {
