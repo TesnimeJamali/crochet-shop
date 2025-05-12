@@ -2,8 +2,10 @@
 namespace App\Controller;
 
 use App\Entity\AlerteStock;
+use App\Entity\Coupon;
 use App\Entity\Product;
 use App\Form\AlerteStockTypeForm;
+use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,11 +23,13 @@ use Symfony\Component\Mime\Address;
 final class CartController extends AbstractController
 {
     #[Route('/cart', name: 'app_cart')]
-    public function index(SessionInterface $session, ProductRepository $productRepository): Response
+    public function index(SessionInterface $session, ProductRepository $productRepository, CouponRepository $couponRepository): Response
     {
         $panier = $session->get('panier', []);
         $total = $session->get('total', 0);
         $info_panier = $session->get('info_panier', []);
+        $id = $session->get('coupon');
+        $coupon = $couponRepository->find($id);
         foreach ($panier as $id => $quantite) {
             $product = $productRepository->find($id);
             $info_panier[] = [
@@ -35,7 +39,7 @@ final class CartController extends AbstractController
             $total = $total + ($product->getPrice()) * $quantite;
         }
         return $this->render('cart/index.html.twig', [
-            'controller_name' => 'CartController', "info_panier" => $info_panier, "total" => $total,
+            'controller_name' => 'CartController', "info_panier" => $info_panier, "total" => $total,"coupon" => $coupon,
         ]);
     }
 
@@ -150,4 +154,20 @@ final class CartController extends AbstractController
             return new Response('ERREUR Générale : ' . $e->getMessage());
         }
     }
+    #[Route('/cart/apply-coupon', name: 'apply_coupon', methods: ['POST'])]
+    public function applyCoupon(Request $request, EntityManagerInterface $em): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+        $code = $request->request->get('code');
+        $coupon = $em->getRepository(Coupon::class)->findOneBy(['code' => $code]);
+        if (!$coupon || !$coupon->isValid()) {
+            $this->addFlash('coupon_error', 'Ce code promo est invalide ou expiré.');
+        } else {
+            $this->addFlash('coupon_success', 'Code promo appliqué : -' . $coupon->getDiscount() . '%');
+            $session = $request->getSession();
+            $session->set('coupon', $coupon->getId());
+        }
+
+        return $this->redirectToRoute('app_cart');
+    }
+
 }
