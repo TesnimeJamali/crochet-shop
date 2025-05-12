@@ -11,9 +11,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ImageCarouselRepository;
-use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use App\Repository\AlerteStockRepository;
+
 
 #[Route('/admin')]
 class AdminController extends AbstractController
@@ -43,13 +47,40 @@ class AdminController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_product_edit')]
-    public function edit(Product $product, Request $request, EntityManagerInterface $em): Response
-    {
+    public function edit(
+        Product $product,
+        Request $request,
+        EntityManagerInterface $em,
+        AlerteStockRepository $alerteStockRepository,
+        MailerInterface $mailer
+    ): Response {
+        $oldQuantity = $product->getQuantity();
+
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($product);
+            $newQuantity = $product->getQuantity();
+
+            if ($oldQuantity == 0 && $newQuantity > 0) {
+                $alertes = $alerteStockRepository->findBy(['product' => $product]);
+
+                foreach ($alertes as $alerte) {
+                    $email = (new Email())
+                        ->from(new Address('projetweb521@gmail.com', 'Crochet Shop'))
+                        ->to(new Address($alerte->getEmail(), 'Destinataire'))
+                        ->subject('Produit à nouveau en stock !')
+                        ->html("
+                        <p>Bonjour,</p>
+                        <p>Le produit <strong>{$product->getName()}</strong> est à nouveau disponible.</p>
+                        <p><a href='https://crochetdor.com/produit/{$product->getId()}'>Voir le produit</a></p>
+                    ");
+
+                    $mailer->send($email);
+                    $em->remove($alerte);
+                }
+            }
+
             $em->flush();
             $this->addFlash('success', 'Produit modifié avec succès.');
             return $this->redirectToRoute('admin_products');
@@ -60,6 +91,7 @@ class AdminController extends AbstractController
             'product' => $product,
         ]);
     }
+
 
 
     #[Route('/{id}/delete', name: 'admin_product_delete')]

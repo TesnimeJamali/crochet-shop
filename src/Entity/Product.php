@@ -1,19 +1,25 @@
 <?php
 
 namespace App\Entity;
+use App\Repository\AlerteStockRepository;
 use App\Repository\ProductRepository;
+use App\Service\NotificationService;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @ORM\Entity
  * @Vich\Uploadable
  */
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Product
 {
     #[ORM\Id]
@@ -49,6 +55,16 @@ class Product
     #[ORM\Column(type: 'integer')]
     #[Assert\PositiveOrZero(message: 'Quantity must be zero or positive.')]
     private ?int $quantity = null;
+
+    #[ORM\OneToMany(targetEntity: AlerteStock::class, mappedBy: 'product', cascade: ['remove'])]
+    private Collection $alertes;
+
+    private static ?NotificationService $notifier = null;
+    private static ?AlerteStockRepository $alerteRepo = null;
+
+    public static function setNotifier(NotificationService $n): void { self::$notifier = $n; }
+    public static function setAlerteRepo(AlerteStockRepository $r): void { self::$alerteRepo = $r; }
+
 
     public function getQuantity(): ?int
     {
@@ -136,6 +152,5 @@ class Product
     {
         $this->updatedAt = $updatedAt;
     }
-
 
 }
