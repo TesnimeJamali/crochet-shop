@@ -48,17 +48,20 @@
                         </div>
                     </div>
                     {% if item.produit.quantity == 0 %}
-                        <div class="alert alert-danger mt-3 text-center">
-                            <p class="fs-5 mb-3" style="font-weight: 500;">
-                                Le produit <strong>"{{ item.produit.name }}"</strong> n’est plus en stock.
-                            </p>
-                            <a href="{{ path('alerte_stock', {id: item.produit.id}) }}" class="btn btn-warning px-4 py-2">
-                                Être averti quand il est de nouveau disponible
-                            </a>
-                        </div>
-                    {% endif %}
+                <div class="alert mt-3 text-center" style="background-color: #e6f0ff; border-color: #cce0ff; color: #003366;">
+                <p class="fs-5 mb-3" style="font-weight: 500;">
+                Le produit <strong>"{{ item.produit.name }}"</strong> n’est plus en stock.
+                </p>
+                <a href="{{ path('alerte_stock', {id: item.produit.id}) }}" class="btn px-4 py-2"
+                   style="background-color: #d1e7ff; color: #004080; border: none;">
+                    Être averti quand il est de nouveau disponible
+                </a>
+            </div>
+        {% endif %}
 
-                {% endfor %}
+
+
+        {% endfor %}
             </div>
             <div class="card mt-5 border-success shadow">
                 <div class="card-body d-flex justify-content-between align-items-center">
@@ -114,11 +117,28 @@
                 </div>
             </div>
 
-            <div class="text-end mt-4">
-                <a href="{{ path('app_order_new') }}" class="btn btn-success btn-lg px-4 shadow-sm">
-                    <i class="bi bi-credit-card-fill me-2"></i> Valider mon panier
-                </a>
+            <div class="text-center mt-5">
+                <div class="d-inline-flex flex-wrap justify-content-center gap-3">
+                    <a href="{{ path('app_order_new') }}"
+                       class="btn btn-lg px-4 shadow-sm"
+                       style="background-color: #c8e6c9; color: #2e7d32;">
+                        <i class="bi bi-credit-card-fill me-2"></i> Valider mon panier
+                    </a>
+                    <a href="{{ path('shop') }}"
+                       class="btn btn-lg px-4 shadow-sm"
+                       style="background-color: #d1c4e9; color: #4527a0;">
+                        <i class="bi bi-arrow-left-circle me-2"></i> Continuer mes achats
+                    </a>
+                    <a href="{{ path('cart_clear') }}"
+                       class="btn btn-lg px-4 shadow-sm"
+                       style="background-color: #f8bbd0; color: #c2185b;">
+                        <i class="bi bi-trash-fill me-2"></i> Vider le panier
+                    </a>
+
+                </div>
             </div>
+
+
         {% endif %}
     </div>
 {% endblock %}

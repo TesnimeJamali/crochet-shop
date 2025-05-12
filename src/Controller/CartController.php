@@ -29,7 +29,6 @@ final class CartController extends AbstractController
         $total = $session->get('total', 0);
         $info_panier = $session->get('info_panier', []);
         $id = $session->get('coupon');
-        $coupon = $couponRepository->find($id);
         foreach ($panier as $id => $quantite) {
             $product = $productRepository->find($id);
             $info_panier[] = [
@@ -38,9 +37,17 @@ final class CartController extends AbstractController
             ];
             $total = $total + ($product->getPrice()) * $quantite;
         }
-        return $this->render('cart/index.html.twig', [
-            'controller_name' => 'CartController', "info_panier" => $info_panier, "total" => $total,"coupon" => $coupon,
-        ]);
+        if (!empty($id)) {
+            $coupon = $couponRepository->find($id);
+            return $this->render('cart/index.html.twig', [
+                'controller_name' => 'CartController', "info_panier" => $info_panier, "total" => $total,"coupon" => $coupon,"session" => $session,
+            ]);
+        }
+        else{
+            return $this->render('cart/index.html.twig', [
+                'controller_name' => 'CartController', "info_panier" => $info_panier, "total" => $total
+            ]);
+        }
     }
 
     #[Route('/add/{id}', name: 'add')]
@@ -169,5 +176,16 @@ final class CartController extends AbstractController
 
         return $this->redirectToRoute('app_cart');
     }
+
+    #[Route('/clear', name: 'cart_clear')]
+    public function clear( SessionInterface $session): Response
+    {
+        $session->remove('panier');
+        $session->remove('coupon');
+        return $this->redirectToRoute('app_cart');
+
+
+    }
+
 
 }
