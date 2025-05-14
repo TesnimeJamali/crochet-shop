@@ -47,10 +47,10 @@
                     <a class="nav-link" href="#">About</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('shop') }}">Shop</a>
+                    <a class="nav-link" href="{{ path('shop') }}">Shop</a>
                 </li>
                 <li class="nav-item">
-                <a class="nav-link" href="{{ path('admin_products') }}">Admin</a>
+                    <a class="nav-link" href="{{ path('admin_products') }}">Admin</a>
                 </li>
             </ul>
 
@@ -67,10 +67,17 @@
                         <i class="fa-solid fa-heart" style="color: #fff;"></i>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-user" style="color: #fff;"></i>
                     </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{{ path('app_login') }}">Se connecter</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_register') }}">S'inscrire</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ path('app_profile') }}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_cart') }}">
@@ -89,7 +96,7 @@
                 <a href="{{ path('app_cart') }}" class="text-decoration-none">
                     <div id="flash" class="alert alert-dismissible shadow-sm border border-secondary"
                          style="background-color: white; color: black; min-width: 300px; cursor: pointer;">
-                         {{ message }}
+                        {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </a>
@@ -118,6 +125,11 @@
                 }, 50);
             }, 3000);
         });
+        // Add this to make dropdown work
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl)
+        })
     });
 </script>
 

@@ -1,5 +1,7 @@
 <?php
 namespace App\Controller;
+
+
 use App\Controller\ImageCarouselController;
 use App\Entity\Product;
 use App\Entity\ImageCarousel;
@@ -17,6 +19,9 @@ use App\Repository\ImageCarouselRepository;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use App\Repository\AlerteStockRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted; // Import IsGranted
+use Symfony\Component\Security\Core\Exception\AccessDeniedException; // Import AccessDeniedException
+use Symfony\Component\Form\FormError;
 
 
 #[Route('/admin')]

@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mt-4">Votre Profil</h1>
+
+        {% if app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ app.flashes('success')|join('<br>') }}
+            </div>
+        {% endif %}
+
+        {{ form_start(profileForm) }}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form_row(profileForm.nom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(profileForm.prenom, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form_row(profileForm.telephone, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(profileForm.adresse, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            {{ form_row(profileForm.email, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(profileForm.plainPassword, {
+                'attr': {'class': 'form-control'},
+                'label_attr': {'class': 'form-label'},
+                'help': 'Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.'
+            }) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Mettre à jour le profil</button>
+        {{ form_end(profileForm) }}
+    </div>
+{% endblock %}
