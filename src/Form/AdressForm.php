@@ -65,7 +65,7 @@ class AdressForm extends AbstractType
                 "label"=>"Zip Code"
             ])
 
-            ->add('next', SubmitType::class, ['label' => 'Next']);
+            ->add('next', SubmitType::class, ['label' => 'Suivant','attr'=> ['class'=> 'btn btn-success']]);
         ;
     }
 

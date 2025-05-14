@@ -10,9 +10,9 @@
         <div class="row">
             <div class="col-6 mx-auto">
                 <div class="d-flex align-items-center justify-content-evenly">
-                    <button type="button" class="btn btn-danger clickToChange" id="Bpaid">Paid</button>
-                    <button type="button" class="btn btn-primary clickToChange" id="Bpending">Pending</button>
-                    <button type="button" class="btn btn-primary clickToChange" id="Bcanceled">Canceled</button>
+                    <button type="button" class="btn clickToChange active-pastel" id="Bpaid" style="background-color: #a8d8ea;">Paid</button>
+                    <button type="button" class="btn clickToChange" id="Bpending" style="background-color: #f5f5f5;">Pending</button>
+                    <button type="button" class="btn clickToChange" id="Bcanceled" style="background-color: #f5f5f5;">Canceled</button>
                 </div>
             </div>
         </div>
@@ -27,35 +27,65 @@
         </div>
     </div>
 
-    <a href="{{ path('app_order_new') }}">Create new</a>
+    <style>
+        .clickToChange {
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .active-pastel {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        #Bpaid { --active-color: #a8d8ea; }
+        #Bpending { --active-color: #f7d794; }
+        #Bcanceled { --active-color: #f8a5c2; }
+    </style>
 {% endblock %}
 {% block javascripts %}
 <script>
-    const btns= document.querySelectorAll('.clickToChange');
+    const btns = document.querySelectorAll('.clickToChange');
     const Tpaid = document.getElementById('Tpaid');
     const Tpending = document.getElementById('Tpending');
     const Tcanceled = document.getElementById('Tcanceled');
 
     btns.forEach(btn => {
         btn.addEventListener('click', (e) => {
+            btns.forEach(b => {
+                b.style.backgroundColor = '#f5f5f5';
+                b.style.color = '#495057';
+                b.style.border = '1px solid #dee2e6';
+                b.classList.remove('active-pastel');
+            });
+
+
+            btn.style.backgroundColor = '#a8d8ea';
+            btn.style.color = '#212529';
+            btn.style.border = '1px solid #92c9e0';
+            btn.classList.add('active-pastel');
+
 
             if (btn.id === 'Bpaid') {
                 Tpaid.style.display = 'block';
                 Tpending.style.display = 'none';
                 Tcanceled.style.display = 'none';
-
             } else if (btn.id === 'Bpending') {
                 Tpaid.style.display = 'none';
                 Tpending.style.display = 'block';
                 Tcanceled.style.display = 'none';
-
-            } else if (btn.id === 'Bcanceled'){
+            } else if (btn.id === 'Bcanceled') {
                 Tpaid.style.display = 'none';
                 Tpending.style.display = 'none';
                 Tcanceled.style.display = 'block';
-
             }
         });
     });
+    document.querySelectorAll('#Tpaid, #Tpending, #Tcanceled').forEach(el => {
+        el.style.transition = 'opacity 0.3s ease';
+    });
 </script>
+
 {% endblock %}

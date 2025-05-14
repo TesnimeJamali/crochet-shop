@@ -1,44 +1,48 @@
 <div class="card bg-white shadow-sm mb-4" style="max-width: 24rem;">
-    <div class="card-header bg-white border-bottom pb-2">
-        <h5 class="card-title mb-0 fw-semibold">Order Summary</h5>
-    </div>
+    <div class="card border-0 shadow-sm mb-4" style="max-width: 28rem; border-radius: 12px; overflow: hidden; background-color: #f8f9fa;">
 
-    <div class="card-body p-0">
-        <ul class="list-group list-group-flush">
-            {% for item in order.items %}
-                <li class="list-group-item bg-white d-flex justify-content-between align-items-center px-3 py-2 border-0 {{ item.highlight|default(false) ? 'fw-bold' : '' }}">
-                    <span class="{{ item.label_class|default('text-secondary') }}">
+        <div class="card-header border-0 pb-3" style="background-color: #FFFFFF;">
+            <h5 class="card-title mb-0 fw-semibold" style="color: #000000;">
+                <i class="bi bi-receipt me-2" style="color: #000000;"></i>
+                Order Summary
+            </h5>
+        </div>
+
+        <div class="card-body p-0">
+            <ul class="list-group list-group-flush">
+                {% for item in order.items %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3 border-0 {{ item.highlight|default(false) ? 'fw-bold' : '' }}"
+                        style="background-color: #FFF7EB;">
+                    <span class="{{ item.label_class|default('text-secondary') }}" style="color: #7a8b9b;">
                         {{ item.label }}
                         {% if item.tooltip|default(false) %}
-                            <i class="bi bi-info-circle ms-1 text-muted" data-bs-toggle="tooltip" title="{{ item.tooltip }}"></i>
+                            <i class="bi bi-info-circle ms-2" style="color: #b5cd85;" data-bs-toggle="tooltip" title="{{ item.tooltip }}"></i>
                         {% endif %}
                     </span>
-                    <span class="{{ item.value_class|default('text-dark') }}">{{ item.value }}</span>
-                </li>
-            {% endfor %}
-        </ul>
+                        <span class="{{ item.value_class|default('') }}" style="color: #6c7b8b; font-weight: 500;">
+                        {{ item.value }}
+                    </span>
+                    </li>
+                {% endfor %}
+            </ul>
 
-        <div class="bg-light px-3 py-2">
-            <div class="d-flex justify-content-between align-items-center fw-bold fs-5 py-1">
-                <span class="text-dark">Total</span>
-                <span class="text-dark">{{ order.total }}</span>
+            <div class="px-4 py-3" style="background-color: #FFFFFF; border-top: 1px dashed #c8e6c9;">
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span class="fw-bold" style="color: #4a6b57; font-size: 1.1rem;">Total Amount</span>
+                    <span class="fw-bold" style="color: #2e7d32; font-size: 1.2rem;">{{ order.total }}</span>
+                </div>
             </div>
         </div>
+
     </div>
 
     <div class="card-header bg-white border-bottom pb-2">
         <h5 class="card-title mb-0 fw-semibold">Shipping Address</h5>
     </div>
     <pre>
-        <ul class="list-group list-group-flush">
-
-                <li class="bg-white   px-3 py-2 border-0 {{ item.highlight|default(false) ? 'fw-bold' : '' }}">
-
-                        {{ adress}}
-
-                </li>
-
-        </ul>
+        <p>
+            {{ adress}}
+        </p>
         </pre>
 
 </div>

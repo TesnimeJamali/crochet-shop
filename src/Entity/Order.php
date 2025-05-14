@@ -34,8 +34,14 @@ class Order
     #[ORM\Column(length: 50)]
     private ?string $paymentMethod = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255 , nullable: true)]
     private ?string $shippingAdress = null;
+
+    #[ORM\Column(length: 255 , nullable: true)]
+    private ?string $sessionId = null;
+
+    #[ORM\Column(length: 255 , nullable: true)]
+    private ?string $paymentIntentId = null;
 
     /**
      * @var Collection<int, OrderDetail>
@@ -164,5 +170,25 @@ class Order
         }
 
         return $this;
+    }
+
+    public function getSessionId(): ?string
+    {
+        return $this->sessionId;
+    }
+
+    public function setSessionId(?string $sessionId): void
+    {
+        $this->sessionId = $sessionId;
+    }
+
+    public function getPaymentIntent(): ?string
+    {
+        return $this->paymentIntentId;
+    }
+
+    public function setPaymentIntent(?string $payment_intent): void
+    {
+        $this->paymentIntentId = $payment_intent;
     }
 }

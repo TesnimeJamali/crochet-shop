@@ -4,58 +4,37 @@
 
 {% block body %}
     <div class="container">
-        <div class="row ">
-            <!-- Left: Form -->
-            <div class="col-md-7 card-header bg-white border-bottom pb-2 ">
+        <div class="row justify-content-evenly p-1 ">
+            <div class="col-md-5 card-header bg-white border-bottom p-2 border-0 shadow-sm mb-4" style=" border-radius: 12px; ">
                 {% if step==1 %}
+                    <h3><i class="fas fa-credit-card me-2"></i>Payment Method</h3>
+                    {{ include('order/paymentFormOrder.html.twig') }}
+                {% elseif step==2 %}
                     <h3>Shipping Address</h3>
                     {{ include('order/addressFormOrder.html.twig') }}
-                {% elseif step==2 %}
+                {% elseif step==3 %}
                     <h3>Confirming Address</h3>
                     {{ include('order/confirmAddressFormOrder.html.twig') }}
                 {% else %}
-                    <h3>Payment</h3>
-                    {{ include('order/paymentFormOrder.html.twig') }}
-                    <div class="row">
-                        {% for item in info_panier %}
-                            <div class="col-md-5 mb-4">
-                                <a href="{{ path('shop_product_details', {'id': item.produit.id}) }}" class="text-decoration-none">
-                                    <div class="card h-100 product-card">
-                                        {% if item.produit.imageName %}
-                                            <img src="{{ asset('uploads/products/' ~ item.produit.imageName) }}" class="card-img-top" alt="{{ item.produit.name }}">
-                                        {% endif %}
-                                        <div class="card-body">
-                                            <h5 class="card-title text-dark">{{ item.produit.name }}</h5>
-                                            <p class="card-text text-muted">{{ item.produit.description|slice(0, 100) ~ '...' }}</p>
-                                            <p class="card-text text-dark"><strong>{{ item.produit.price }} TND</strong></p>
-                                            <div class="mt-3">
-                                                {{ item.quantite }} pieces
-                                                Total price:{{ (item.produit.price)*(item.quantite) }} TND
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        {% endfor %}
-                    </div>
+                    hola
                 {% endif %}
 
             </div>
 
-            <!-- Right: Content Display -->
             <div class="col-md-5 ">
-                {% if step==1 or step==2 %}
+                {% if step==2 or step==3 or step==1 %}
                     {{ include('order/step1Display.html.twig' , {order:orderDetailsDisplay}) }}
                 {% else %}
                     {{ include('order/step3Display.html.twig' , {order:orderDetailsDisplay, adress:address}) }}
                 {% endif %}
+                <a href="{{ path('app_cart') }}" class="btn p-2" style="background-color: #FFF7EB;">Annuler</a>
             </div>
         </div>
         {% if step!=1 %}
-            <button class="btn"><a href="{{ path('app_order_new' ,{step:(step-1)} )}}">Back</a></button>
+           <a href="{{ path('app_order_new' ,{step:(step-1)} )}}" class="btn">Back</a>
         {% endif %}
     </div>
 
 
-    <a href="{{ path('app_order_index') }}">back to list</a>
+
 {% endblock %}

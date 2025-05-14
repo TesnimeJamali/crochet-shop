@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title %}Admin Products{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="card mb-4 border-0 shadow-sm" style="background-color: #f8f9fa;">
+            <div class="card-body p-4">
+                <form method="get" action="{{ path('app_order_topselledAdmin') }}" class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label" style="color: #6c757d;">Nombre de produits à afficher :</label>
+                        <div class="input-group">
+                            <input type="number" name="limit" value="{{ current_limit }}" min="1" class="form-control"
+                                   style="border-color: #ced4da; background-color: #fff;" id="limitInput">
+                            <button type="submit" class="btn" style="background-color: #d4edda; color: #155724; border-color: #c3e6cb;">
+                                <i class="fas fa-sync-alt"></i> Mettre à jour
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-8 text-end">
+                    <span class="badge rounded-pill" style="background-color: #e2e3e5; color: #383d41;">
+                        <i class="fas fa-info-circle me-1"></i> Filtrez les produits les plus vendus
+                    </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card-header border-0 mb-2 p-2" style="background-color: #d1c4e9; color: #4527a0;">
+            <h5 class="mb-0">
+                <i class="fas fa-chart-line me-2"></i> Produits les plus vendus
+            </h5>
+        </div>
+
+            {% include 'admin/listeTopSelled.html.twig' %}
+
+    </div>
+
+
+{% endblock %}

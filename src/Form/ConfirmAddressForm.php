@@ -18,7 +18,7 @@ class ConfirmAddressForm extends AbstractType
             ->add('shippingAdress',TextareaType::class,[
                 'attr' => ['readonly' => true],
             ])
-            ->add('next', SubmitType::class, ['label' => 'Next'])
+            ->add('next', SubmitType::class, ['label' => 'Suivant','attr'=> ['class'=> 'btn btn-success']])
         ;
     }
 

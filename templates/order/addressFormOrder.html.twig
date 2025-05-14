@@ -1,33 +1,73 @@
+<div class="row justify-content-start ml-3">
 <div class="d-flex flex-column gap-3">
 {{ form_start(form) }}
+    <div class="mb-4">
+        <div class="form-floating">
     {{ form_widget(form.first_name, {
-        'attr': {'class': 'form-control', 'placeholder': 'Enter first name'}
+        'attr': {'class': 'form-control', 'placeholder': 'Enter first name' , 'style': 'background-color: #f0f7ff; border-color: #cce5ff; height: 58px;'}
     }) }}
+            <label for="{{ form.first_name.vars.id }}" style="color: #6c757d;">Nom</label>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <div class="form-floating">
     {{ form_widget(form.last_name, {
-        'attr': {'class': 'form-control', 'placeholder': 'Enter last name'}
+        'attr': {'class': 'form-control', 'placeholder': 'Enter last name ','style': 'background-color: #f0f7ff; border-color: #cce5ff; height: 58px;'}
     }) }}
+            <label for="{{ form.first_name.vars.id }}" style="color: #6c757d;">Prénom</label>
+        </div>
+    </div>
+
     {% if not app.session.has("email") %}
+    <div class="mb-4">
+        <div class="form-floating">
         {{ form_widget(form.email, {
-            'attr': {'class': 'form-control', 'placeholder': 'email@gmail.com','label':'email'}
+            'attr': {'class': 'form-control', 'placeholder': 'email@gmail.com','style': 'background-color: #f0f7ff; border-color: #cce5ff; height: 58px;'}
         }) }}
+            <label for="{{ form.first_name.vars.id }}" style="color: #6c757d;">Email </label>
+        </div>
+    </div>
     {% endif %}
 
+    <div class="mb-4">
+        <div class="form-floating">
     {{ form_widget(form.phone, {
-        'attr': {'class': 'form-control', 'placeholder': '+216 xx xxx xxx'}
+        'attr': {'class': 'form-control', 'placeholder': '+216 xx xxx xxx','style': 'background-color: #f0f7ff; border-color: #cce5ff; height: 58px;'}
     }) }}
 
+            <label for="{{ form.first_name.vars.id }}" style="color: #6c757d;">Téléphone </label>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <div class="form-floating">
     {{ form_widget(form.address, {
-        'attr': {'class': 'form-control', 'placeholder': 'address'}
+        'attr': {'class': 'form-control', 'placeholder': 'address','style': 'background-color: #f0f7ff; border-color: #cce5ff; height: 58px;'}
     }) }}
+            <label for="{{ form.first_name.vars.id }}" style="color: #6c757d;">Address </label>
+        </div>
+    </div>
 
+    <div class="mb-4">
+        <div class="form-floating">
     {{ form_widget(form.governorate, {
-        'attr': {'class': 'form-control'}
+        'attr': {'class': 'form-control','style': 'background-color: #f0f7ff; border-color: #cce5ff; height: 58px;'}
     }) }}
+            <label for="{{ form.first_name.vars.id }}" style="color: #6c757d;">Governorate </label>
+        </div>
+    </div>
 
+    <div class="mb-4">
+        <div class="form-floating">
     {{ form_widget(form.ZIPCode, {
-        'attr': {'class': 'form-control', 'placeholder': 'xxxx'}
+        'attr': {'class': 'form-control', 'placeholder': 'xxxx','style': 'background-color: #f0f7ff; border-color: #cce5ff; height: 58px;'}
     }) }}
-<button class="btn">{{ form_widget(form.next)}}</button>
+            <label for="{{ form.first_name.vars.id }}" style="color: #6c757d;">Code Postal </label>
+        </div>
+    </div>
+
 {{ form_end(form) }}
 
+</div>
 </div>

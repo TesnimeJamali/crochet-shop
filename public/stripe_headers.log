@@ -1,0 +1,53 @@
+Array
+(
+    [content-type] => Array
+        (
+            [0] => application/json; charset=utf-8
+        )
+
+    [content-length] => Array
+        (
+            [0] => 4262
+        )
+
+    [stripe-signature] => Array
+        (
+            [0] => t=1747178380,v1=af6cf9b8a0f0d669151bc24be193a81213fe543e037031d2b481b4079a82c454,v0=9aa90a90240f8c2d8ceda04f497eeca53afd2eebf37bf38c1d23db93cf2adeb9
+        )
+
+    [accept] => Array
+        (
+            [0] => */*; q=0.5, application/xml
+        )
+
+    [user-agent] => Array
+        (
+            [0] => Stripe/1.0 (+https://stripe.com/docs/webhooks)
+        )
+
+    [host] => Array
+        (
+            [0] => localhost:8000
+        )
+
+    [mod-rewrite] => Array
+        (
+            [0] => On
+        )
+
+    [cache-control] => Array
+        (
+            [0] => no-cache
+        )
+
+    [accept-encoding] => Array
+        (
+            [0] => gzip
+        )
+
+    [x-php-ob-level] => Array
+        (
+            [0] => 1
+        )
+
+)

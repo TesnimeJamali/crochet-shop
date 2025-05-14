@@ -8,39 +8,35 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ order.id }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
+                <th>Passée le</th>
                 <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>TotalAmount</th>
+                <th>Montant Total</th>
                 <td>{{ order.totalAmount }}</td>
             </tr>
             <tr>
-                <th>TotalQuantity</th>
+                <th>Quantité totale</th>
                 <td>{{ order.totalQuantity }}</td>
             </tr>
             <tr>
-                <th>Status</th>
+                <th>Etat</th>
                 <td>{{ order.status }}</td>
             </tr>
             <tr>
-                <th>Phone</th>
+                <th>Téléphone</th>
                 <td>{{ order.phone }}</td>
             </tr>
             <tr>
-                <th>PaymentMethod</th>
+                <th>Méthode de paiement</th>
                 <td>{{ order.paymentMethod }}</td>
             </tr>
             <tr>
-                <th>ShippingAdress</th>
+                <th>Adresse de livraison</th>
                 <td>{{ order.shippingAdress }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_order_index') }}">back to list</a>
+    <a href="{{ path('app_order_index') }}" class="btn ">Retournez à la liste</a>
 {% endblock %}

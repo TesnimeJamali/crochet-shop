@@ -15,6 +15,24 @@ class OrderDetailRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, OrderDetail::class);
     }
+    public function findTopSellingProducts(int $limit = 10): array
+    {
+        return $this->createQueryBuilder('od')
+            ->select([
+                'p.id',
+                'p.name',
+                'p.price',
+                'p.imageName',
+
+                'SUM(od.quantity) as totalQuantity'
+            ])
+            ->join('od.product', 'p')
+            ->groupBy('od.product')
+            ->orderBy('totalQuantity', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 
 //    /**
 //     * @return OrderDetail[] Returns an array of OrderDetail objects

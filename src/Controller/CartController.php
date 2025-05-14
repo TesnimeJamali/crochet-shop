@@ -147,7 +147,7 @@ final class CartController extends AbstractController
         try {
             $email = (new Email())
                 ->from(new Address('projetweb521@gmail.com', 'Crochet Shop'))
-                ->to(new Address('allagasmii@gmail.com', 'Destinataire'))
+                ->to(new Address('oumaymadrive@gmail.com', 'Destinataire'))
                 ->subject('Test de la route')
                 ->text('Ceci est un test depuis la route');
 

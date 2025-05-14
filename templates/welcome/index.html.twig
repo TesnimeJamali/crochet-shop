@@ -30,7 +30,7 @@
         </button>
     </div>
 
-
+    {{ render(controller('App\\Controller\\OrderController::topSelled',{'limit':10})) }}
     <h1>Our Crochet Products</h1>
     <div class="row">
         {% for product in products %}

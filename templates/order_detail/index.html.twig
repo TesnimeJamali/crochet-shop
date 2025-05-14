@@ -20,10 +20,6 @@
                 <td>{{ order_detail.id }}</td>
                 <td>{{ order_detail.price }}</td>
                 <td>{{ order_detail.quantity }}</td>
-                <td>
-                    <a href="{{ path('app_order_detail_show', {'id': order_detail.id}) }}">show</a>
-                    <a href="{{ path('app_order_detail_edit', {'id': order_detail.id}) }}">edit</a>
-                </td>
             </tr>
         {% else %}
             <tr>
@@ -32,6 +28,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_order_detail_new') }}">Create new</a>
 {% endblock %}

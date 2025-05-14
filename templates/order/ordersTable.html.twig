@@ -1,36 +1,45 @@
-<h2>{{ status }}</h2>
-<table class="table">
-    <thead>
-    <tr>
-        <th>CreatedAt</th>
-        <th>Total Amount</th>
-        <th>Total Quantity</th>
-        <th>Phone</th>
-        <th>Payment Method</th>
-        <th>Shipping Adress</th>
-        <th>actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for order in orders %}
-        <tr>
-            <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            <td>{{ order.totalAmount }}</td>
-            <td>{{ order.totalQuantity }}</td>
-            <td>{{ order.phone }}</td>
-            <td>{{ order.paymentMethod }}</td>
-            <td>{{ order.shippingAdress }}</td>
-            <td>
-                <button type="button" class="btn btn-danger"><a href="{{ path('app_order_show', {'id': order.id}) }}">show</a></button>
-            </td>
-        </tr>
-    {% else %}
-
-        <tr>
-            <td colspan="9">
-                    you have no {{ status }} orders
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<div class="container mt-4">
+    <div class="card border-0 shadow-sm" style="background-color: #f8f9fa;">
+        <div class="card-header border-0" style="background-color: #d4edda; color: #155724;">
+            <h2 class="mb-0 text-center">{{ status }}</h2>
+        </div>
+        <div class="card-body">
+            {% if orders|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light" style="background-color: #e2e3e5; color: #383d41;">
+                        <tr>
+                            <th>Passée le</th>
+                            <th>Montant Total</th>
+                            <th>Quantité totale</th>
+                            <th>Téléphone</th>
+                            <th>Méthode de paiement</th>
+                            <th>Adresse de livraison</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orders %}
+                            <tr style="background-color: #fefefe;">
+                                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                                <td>{{ order.totalAmount }} DT</td>
+                                <td>{{ order.totalQuantity }}</td>
+                                <td>{{ order.phone }}</td>
+                                <td>{{ order.paymentMethod }}</td>
+                                <td>{{ order.shippingAdress }}</td>
+                                <td>
+                                    <a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-sm" style="background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;">Voir détails</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center" style="background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb;">
+                    <i class="fas fa-info-circle"></i> Vous n'avez aucune commande {{ status }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

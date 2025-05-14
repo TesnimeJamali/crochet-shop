@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Order;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,11 +17,13 @@ class PaymentForm extends AbstractType
             ->add("paymentMethod",ChoiceType::class, [
                 'label' => false,
                 'choices' => [
-                    "Flouci"=>"Flouci",
-                    "Stripe"=>"Stripe",
+                    "Cash"=>"cash",
+                    "Stripe"=>"stripe",
                 ],
                 'expanded'=>true,
             ])
+            ->add('payer', SubmitType::class, ['label' => 'Payer','attr'=> ['class'=> 'btn btn-success']])
+
         ;
     }
 
