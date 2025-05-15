@@ -10,7 +10,9 @@ services:
         autoconfigure: true
         bind:
             $mailer: '@Symfony\Component\Mailer\MailerInterface'
-
+    App\Service\FavorisService:
+        arguments:
+            - '@doctrine.orm.entity_manager'
     # Makes classes in src/ available to be used as services
     App\:
         resource: '../src/'

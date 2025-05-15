@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Favoris{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .favorite-icon {
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .favorite-icon.active i {
+            color: #dc3545;
+        }
+        .empty-favorites {
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Mes Favoris</h1>
+            <span class="badge bg-primary">{{ favoris|length }} produit(s)</span>
+        </div>
+
+        {% if favoris|length > 0 %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for product in favoris %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div class="position-relative">
+                                <a href="{{ path('product_details', {'id': product.id}) }}">
+                                    <img src="{{ asset('uploads/products/' ~ product.imageName) }}"
+                                         class="card-img-top"
+                                         alt="{{ product.name }}"
+                                         style="height: 200px; object-fit: cover;">
+                                </a>
+                                <span class="favorite-icon active position-absolute top-0 end-0 m-2"
+                                      data-product-id="{{ product.id }}"
+                                      title="Retirer des favoris">
+                                <i class="fas fa-heart"></i>
+                            </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ path('product_details', {'id': product.id}) }}"
+                                       class="text-decoration-none text-dark">
+                                        {{ product.name }}
+                                    </a>
+                                </h5>
+                                <p class="card-text text-muted mb-2">
+                                    {{ product.description|slice(0, 80) ~ (product.description|length > 80 ? '...' : '') }}
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="h5 text-primary mb-0">{{ product.price }} DT</span>
+                                    <a href="{{ path('add', {'id': product.id}) }}" class="btn custom-cart-btn">
+                                        <i class="fas fa-cart-plus me-1"></i> Ajouter
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-favorites text-center py-5">
+                <div class="mb-4">
+                    <i class="far fa-heart fa-5x text-muted"></i>
+                </div>
+                <h3 class="mb-3">Votre liste de favoris est vide</h3>
+                <p class="text-muted mb-4">Ajoutez des produits à vos favoris pour les retrouver facilement</p>
+                <a href="{{ path('app_home') }}" class="btn btn-primary px-4">
+                    <i class="fas fa-arrow-left me-2"></i>Parcourir les produits
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des favoris
+            document.querySelectorAll('.favorite-icon').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productId = this.dataset.productId;
+                    const card = this.closest('.col');
+
+                    fetch(`/favoris/toggle/${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            '_token': '{{ csrf_token('favoris') }}'
+                        })
+                    })
+                        .then(response => {
+                            if (response.status === 401) {
+                                window.location.href = '{{ path('app_login') }}';
+                                return;
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data && data.status === 'removed') {
+                                // Animation de suppression
+                                card.style.transition = 'all 0.3s ease';
+                                card.style.opacity = '0';
+                                card.style.height = '0';
+                                card.style.margin = '0';
+                                card.style.overflow = 'hidden';
+
+                                setTimeout(() => {
+                                    card.remove();
+                                    updateBadgeCount();
+                                }, 300);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+
+            // Mise à jour du compteur
+            function updateBadgeCount() {
+                const count = document.querySelectorAll('.col').length;
+                const badge = document.querySelector('.badge');
+                if (badge) {
+                    badge.textContent = `${count} produit${count !== 1 ? 's' : ''}`;
+                }
+
+                // Si plus de favoris, afficher le message vide
+                if (count === 0) {
+                    document.querySelector('.row').innerHTML = `
+                        <div class="empty-favorites text-center py-5 col-12">
+                            <div class="mb-4">
+                                <i class="far fa-heart fa-5x text-muted"></i>
+                            </div>
+                            <h3 class="mb-3">Votre liste de favoris est vide</h3>
+                            <p class="text-muted mb-4">Ajoutez des produits à vos favoris pour les retrouver facilement</p>
+                            <a href="{{ path('shop') }}" class="btn btn-primary px-4">
+                                <i class="fas fa-arrow-left me-2"></i>Parcourir les produits
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+        });
+    </script>
+{% endblock %}

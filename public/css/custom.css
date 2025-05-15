@@ -59,4 +59,13 @@
     transform: translateY(-2px);
     color: white;
 }
-/* custom.css */
+.favorite-icon i {
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.favorite-icon.active i {
+    color: #fdb2b2; /* rose personnalisé */
+}

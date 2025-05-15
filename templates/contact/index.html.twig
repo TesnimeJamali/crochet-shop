@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contactez-nous ✨{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1 class="display-4 mb-4">Contactez-nous</h1>
+                <p class="lead text-muted"><strong>Nous acceuillons vos commandes personnalisés, vos recommendations et surtout votre soutien!</strong></p>
+
+                <div class="my-5">
+                    <img src="{{ asset('image/logo.png') }}" alt="Crochet D'or" class="rounded-circle shadow" width="200" height="200" style="object-fit: cover; border: 5px solid #ffdeeb;">
+                </div>
+
+                <div class="card shadow-sm border-0" style="border-radius: 20px;">
+                    <div class="card-body p-5">
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="p-4 bg-pink-light rounded" style="background-color: #fff0f6;">
+                                    <h3 class="h5"><i class="fas fa-envelope me-2" style="color: #fdb2b2;"></i> Email</h3>
+                                    <p>contact@crochetdor.com</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="p-4 bg-pink-light rounded" style="background-color: #fff0f6;">
+                                    <h3 class="h5"><i class="fas fa-phone-alt me-2" style="color: #fdb2b2;"></i> Téléphone</h3>
+                                    <p>+33 1 23 45 67 89</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="mt-4">
+                            <div class="mb-3">
+                                <input type="text" class="form-control py-3" placeholder="Votre nom" style="border-radius: 20px; border-color: #ffb6c1;">
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" class="form-control py-3" placeholder="Votre email" style="border-radius: 20px; border-color: #ffb6c1;">
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control py-3" rows="4" placeholder="Votre message ..." style="border-radius: 20px; border-color: #ffb6c1;"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-pink btn-lg px-4 py-2 rounded-pill">
+                                Envoyer <i class="fas fa-paper-plane ms-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <h4 class="mb-3">Retrouvez-nous aussi sur :</h4>
+                    <div>
+                        <a href="#" class="btn btn-outline-pink btn-lg mx-2 rounded-circle"><i class="fab fa-instagram" style="color: #fdb2b2;"></i></a>
+                        <a href="#" class="btn btn-outline-pink btn-lg mx-2 rounded-circle"><i class="fab fa-pinterest" style="color: #fdb2b2;"></i></a>
+                        <a href="#" class="btn btn-outline-pink btn-lg mx-2 rounded-circle"><i class="fab fa-facebook-f" style="color: #fdb2b2;"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .text-pink { color: #fdb2b2; }
+        .btn-pink {
+            background-color: #fdb2b2;
+            color: white;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-pink:hover {
+            background-color: #cf8787;
+            transform: translateY(-2px);
+        }
+        .btn-outline-pink {
+            color: #fdb2b2;
+            border-color: #fdb2b2;
+            transition: all 0.3s;
+        }
+        .btn-outline-pink:hover {
+            background-color: #fff;
+            color: white;
+            transform: scale(1.1);
+        }
+        .bg-pink-light {
+            background-color: #fff0f6;
+        }
+    </style>
+{% endblock %}

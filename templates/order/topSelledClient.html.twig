@@ -1,6 +1,6 @@
 <section class="top-selling-products py-5  ">
     <div class="container">
-        <h2 class="text-center mb-5">Top Selling Products</h2>
+        <h2 class="text-center mb-5">Nos Meilleures Ventes!</h2>
 
         <div id="productsCarousel" class="carousel slide  " data-bs-ride="carousel">
             <div class="carousel-inner p-5">
@@ -28,8 +28,8 @@
                                         </div>
 
                                         <div class="card-footer bg-white">
-                                            <a href="{{ path('add', {'id': product.id}) }}">
-                                                <span class="btn custom-cart-btn">Ajouter au panier</span>
+                                            <a href="{{ path('add', {'id': product.id}) }}" class="btn custom-cart-btn">
+                                                <i class="fas fa-cart-plus me-1"></i> Ajouter
                                             </a>
                                         </div>
                                     </div>

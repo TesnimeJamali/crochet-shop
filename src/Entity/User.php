@@ -72,6 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->favoris = new ArrayCollection();
     }
 
 
@@ -252,7 +253,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    #[ORM\ManyToMany(targetEntity: Product::class)]
+    private Collection $favoris;
 
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Product $product): static
+    {
+        if (!$this->favoris->contains($product)) {
+            $this->favoris->add($product);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Product $product): static
+    {
+        $this->favoris->removeElement($product);
+        return $this;
+    }
 
 }
 

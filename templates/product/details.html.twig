@@ -1,16 +1,36 @@
-
 {% extends 'base.html.twig' %}
+
 {% block title %}{{ product.name }}{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/detail.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <style>
+        .favorite-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+        }
+        .favorite-btn i {
+            color: #adb5bd; /* Gris par défaut */
+        }
+        .favorite-btn.active i {
+            color: #ff4757; /* Rouge quand actif */
+        }
+        .favorite-btn:hover i {
+            transform: scale(1.1);
+        }
+    </style>
 {% endblock %}
+
 {% block body %}
     <div class="container mt-4">
         <div class="row">
-            <div class="col-md-6">
-                {# Check if the product has an image before displaying it #}
+            <div class="col-md-6 position-relative">
                 {% if product.imageName %}
                     <img src="{{ asset('uploads/products/' ~ product.imageName) }}" class="img-fluid" alt="{{ product.name }}">
                 {% else %}
@@ -21,9 +41,72 @@
                 <h1>{{ product.name }}</h1>
                 <p class="lead">{{ product.price }} DT</p>
                 <p>{{ product.description }}</p>
-                <p class="card-text text-dark"><strong>Quantity: {{ product.quantity }} DT</strong></p>
-                <a href="{{ path('add', {'id': product.id}) }}" class="btn custom-cart-btn">Add to Cart</a>
+
+                <div class="d-flex gap-3 mt-4">
+                    <a href="{{ path('add', {'id': product.id}) }}" class="btn custom-cart-btn">
+                        <i class="fas fa-cart-plus me-1"></i> Ajouter
+                    </a>
+
+                    <!-- Variante alternative du bouton favori -->
+                    <button class="favorite-btn {{ app.user and product in app.user.favoris ? 'active' : '' }}"
+                            data-product-id="{{ product.id }}">
+                        <i class="{{ app.user and product in app.user.favoris ? 'fas' : 'far' }} fa-heart me-1"></i>
+                        {{ app.user and product in app.user.favoris ? 'Favori' : 'Ajouter aux favoris' }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des boutons favoris
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productId = this.dataset.productId;
+                    const heartIcon = this.querySelector('i');
+
+                    fetch(`/favoris/toggle/${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            '_token': '{{ csrf_token('favoris') }}'
+                        })
+                    })
+                        .then(response => {
+                            if (response.status === 401) {
+                                window.location.href = '{{ path('app_login') }}';
+                                return;
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'added') {
+                                this.classList.add('active');
+                                this.title = 'Retirer des favoris';
+                                heartIcon.classList.replace('far', 'fas');
+                                if (this.textContent.includes('Ajouter')) {
+                                    this.innerHTML = '<i class="fas fa-heart me-1"></i> Favori';
+                                }
+                            } else if (data.status === 'removed') {
+                                this.classList.remove('active');
+                                this.title = 'Ajouter aux favoris';
+                                heartIcon.classList.replace('fas', 'far');
+                                if (this.textContent.includes('Favori')) {
+                                    this.innerHTML = '<i class="far fa-heart me-1"></i> Ajouter aux favoris';
+                                }
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+        });
+    </script>
 {% endblock %}
