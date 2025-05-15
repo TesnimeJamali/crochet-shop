@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}Welcome{% endblock %}
+{% block title %}Bienvenue!{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
@@ -73,6 +73,13 @@
                             <p class="card-text">
                                 <strong>Prix:</strong> {{ product.price}} DT<br>
                             </p>
+                            {% if product.quantity > 5 %}
+                                <p class="card-text stock-ok">En Stock</p>
+                            {% elseif product.quantity > 0 %}
+                                <p class="card-text stock-warning">Stock Limité ({{ product.quantity }} restant{{ product.quantity == 1 ? '' : 's' }})</p>
+                            {% else %}
+                                <p class="card-text stock-out">Stock Épuisé</p>
+                            {% endif %}
                             <div class="mt-3 d-flex justify-content-between align-items-center">
                                 <a href="{{ path('add', {'id': product.id}) }}" class="btn custom-cart-btn">
                                     <i class="fas fa-cart-plus me-1"></i> Ajouter

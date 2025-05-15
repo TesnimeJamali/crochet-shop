@@ -69,3 +69,18 @@
 .favorite-icon.active i {
     color: #fdb2b2; /* rose personnalisé */
 }
+.stock-ok {
+    color: #2e7d32; /* vert */
+    font-weight: bold;
+}
+
+.stock-warning {
+    color: #ffa500; /* orange */
+    font-weight: bold;
+}
+
+.stock-out {
+    color: darkred;
+    font-weight: bold;
+}
+
