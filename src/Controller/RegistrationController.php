@@ -23,12 +23,12 @@ use Psr\Log\LoggerInterface;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
+    public function __construct(private readonly EmailVerifier $emailVerifier)
     {
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager , LoginFormAuthenticator $formAuthenticator,LoggerInterface $logger): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager , LoginFormAuthenticator $authenticator,LoggerInterface $logger): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationForm::class, $user);
@@ -65,7 +65,12 @@ class RegistrationController extends AbstractController
             // do anything else you need here, like send an email
 
             // Connecter l'utilisateur et le rediriger après l'inscription
-            return $security->login($user, 'main');
+            return $security->login(
+                $user,
+                'App\Security\LoginFormAuthenticator', // Nom complet de la classe
+                'main' // Nom du firewall
+            );
+
         }
 
         return $this->render('registration/register.html.twig', [

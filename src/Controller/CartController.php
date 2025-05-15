@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Entity\AlerteStock;
+use App\Entity\Cart;
+use App\Entity\CartItem;
 use App\Entity\Coupon;
 use App\Entity\Product;
 use App\Form\AlerteStockTypeForm;
@@ -9,6 +11,7 @@ use App\Repository\CouponRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -23,100 +26,211 @@ use Symfony\Component\Mime\Address;
 final class CartController extends AbstractController
 {
     #[Route('/cart', name: 'app_cart')]
-    public function index(SessionInterface $session, ProductRepository $productRepository, CouponRepository $couponRepository): Response
-    {
-        $panier = $session->get('panier', []);
-        $total = $session->get('total', 0);
-        $info_panier = $session->get('info_panier', []);
-        $id = $session->get('coupon');
-        foreach ($panier as $id => $quantite) {
-            $product = $productRepository->find($id);
-            $info_panier[] = [
-                "produit" => $product,
-                "quantite" => $quantite
-            ];
-            $total = $total + ($product->getPrice()) * $quantite;
+    public function index(
+        SessionInterface $session,
+        ProductRepository $productRepository,
+        CouponRepository $couponRepository,
+        Security $security,
+        EntityManagerInterface $em
+    ): Response {
+        $user = $security->getUser();
+        $info_panier = [];
+        $total = 0;
+        $coupon = null;
+
+        if ($user) {
+            $cart = $user->getCart();
+
+            if (!$cart) {
+                $cart = new Cart();
+                $cart->setUser($user);
+                $em->persist($cart);
+                $em->flush();
+            }
+
+            foreach ($cart->getItems() as $item) {
+                $product = $item->getProduct();
+                if (!$product) {
+                    $em->remove($item);
+                    continue;
+                }
+
+                $info_panier[] = [
+                    "produit" => $product,
+                    "quantite" => $item->getQuantity()
+                ];
+                $total += $product->getPrice() * $item->getQuantity();
+            }
+            $em->flush();
+        } else {
+            $panier = $session->get('panier', []);
+
+            foreach ($panier as $id => $quantite) {
+                $product = $productRepository->find($id);
+                if ($product) {
+                    $info_panier[] = [
+                        "produit" => $product,
+                        "quantite" => $quantite
+                    ];
+                    $total += $product->getPrice() * $quantite;
+                }
+            }
+
+            $couponId = $session->get('coupon');
+            if ($couponId) {
+                $coupon = $couponRepository->find($couponId);
+            }
         }
-        if (!empty($id)) {
-            $coupon = $couponRepository->find($id);
-            return $this->render('cart/index.html.twig', [
-                'controller_name' => 'CartController', "info_panier" => $info_panier, "total" => $total,"coupon" => $coupon,"session" => $session,
-            ]);
-        }
-        else{
-            return $this->render('cart/index.html.twig', [
-                'controller_name' => 'CartController', "info_panier" => $info_panier, "total" => $total
-            ]);
-        }
+
+        return $this->render('cart/index.html.twig', [
+            'info_panier' => $info_panier,
+            'total' => $total,
+            'coupon' => $coupon
+        ]);
     }
 
     #[Route('/add/{id}', name: 'add')]
-    public function add(Product $product, SessionInterface $session, Request $request): Response
-    {
-        $panier = $session->get('panier', []);
-        $id = $product->getId();
+    public function add(
+        Product $product,
+        SessionInterface $session,
+        Request $request,
+        Security $security,
+        EntityManagerInterface $em
+    ): Response {
+        $user = $security->getUser();
 
-        if (isset($panier[$id])) {
-            if ($panier[$id] < $product->getQuantity()) {
-                $panier[$id]++;
-                $this->addFlash('success', sprintf('%s a été ajouté au panier.', $product->getName()));
+        if ($user) {
+            $cart = $user->getCart();
+            if (!$cart) {
+                $cart = new Cart();
+                $cart->setUser($user);
+                $em->persist($cart);
+            }
+
+            $existingItem = null;
+            foreach ($cart->getItems() as $item) {
+                if ($item->getProduct()->getId() === $product->getId()) {
+                    $existingItem = $item;
+                    break;
+                }
+            }
+
+            if ($existingItem) {
+                if ($existingItem->getQuantity() < $product->getQuantity()) {
+                    $existingItem->setQuantity($existingItem->getQuantity() + 1);
+                    $em->flush();
+                    $this->addFlash('success', sprintf('%s ajouté au panier', $product->getName()));
+                } else {
+                    $this->addFlash('warning', 'Quantité maximale disponible atteinte');
+                }
             } else {
-                $this->addFlash('warning', sprintf('Stock insuffisant pour %s.', $product->getName()));
+                if ($product->getQuantity() > 0) {
+                    $cartItem = new CartItem();
+                    $cartItem->setProduct($product);
+                    $cartItem->setQuantity(1);
+                    $cartItem->setCart($cart);
+                    $em->persist($cartItem);
+                    $em->flush();
+                    $this->addFlash('success', sprintf('%s ajouté au panier', $product->getName()));
+                } else {
+                    $this->addFlash('warning', 'Produit en rupture de stock');
+                }
             }
         } else {
-            if ($product->getQuantity() > 0) {
-                $panier[$id] = 1;
-                $this->addFlash('success', sprintf('%s a été ajouté au panier.', $product->getName()));
+            $panier = $session->get('panier', []);
+            $id = $product->getId();
+
+            if (isset($panier[$id])) {
+                if ($panier[$id] < $product->getQuantity()) {
+                    $panier[$id]++;
+                    $this->addFlash('success', sprintf('%s ajouté au panier', $product->getName()));
+                } else {
+                    $this->addFlash('warning', sprintf('Stock insuffisant pour %s.', $product->getName()));
+                }
             } else {
-                $this->addFlash('warning', sprintf('%s est en rupture de stock.', $product->getName()));
+                if ($product->getQuantity() > 0) {
+                    $panier[$id] = 1;
+                    $this->addFlash('success', sprintf('%s ajouté au panier', $product->getName()));
+                } else {
+                    $this->addFlash('warning', sprintf('%s est en rupture de stock.', $product->getName()));
+                }
             }
+            $session->set('panier', $panier);
         }
 
-        $session->set('panier', $panier);
-        $referer = $request->headers->get('referer');
-
-        return $this->redirect($referer ?: $this->generateUrl('app_cart'));
+        return $this->redirect($request->headers->get('referer') ?: $this->generateUrl('app_cart'));
     }
 
     #[Route('/delete/{id}', name: 'delete')]
-    public function delete(Product $product, SessionInterface $session): Response
-    {
-        $id = $product->getId();
-        $panier = $session->get('panier', []);
-        if (array_key_exists($id, $panier)) {
-            unset($panier[$id]);
-            $session->set('panier', $panier);
-            return $this->redirectToRoute('app_cart');
+    public function delete(
+        Product $product,
+        SessionInterface $session,
+        Security $security,
+        EntityManagerInterface $em
+    ): Response {
+        $user = $security->getUser();
+
+        if ($user) {
+            $cart = $user->getCart();
+            if ($cart) {
+                foreach ($cart->getItems() as $item) {
+                    if ($item->getProduct()->getId() === $product->getId()) {
+                        $em->remove($item);
+                        break;
+                    }
+                }
+                $em->flush();
+            }
         } else {
+            $panier = $session->get('panier', []);
+            unset($panier[$product->getId()]);
             $session->set('panier', $panier);
-            return $this->redirectToRoute('app_cart');
         }
 
-
+        return $this->redirectToRoute('app_cart');
     }
 
     #[Route('/remove/{id}', name: 'remove')]
-    public function remove(Product $product, SessionInterface $session): Response
-    {
-        $id = $product->getId();
-        $panier = $session->get('panier', []);
-        if (array_key_exists($id, $panier)) {
-            if ($panier[$id] > 1) {
-                $panier[$id]--;
-                $session->set('panier', $panier);
-                return $this->redirectToRoute('app_cart');
-            } else {
-                $session->set('panier', $panier);
-                return $this->redirectToRoute('delete', ['id' => $id]);
-            }
+    public function remove(
+        Product $product,
+        SessionInterface $session,
+        Security $security,
+        EntityManagerInterface $em
+    ): Response {
+        $user = $security->getUser();
 
+        if ($user) {
+            $cart = $user->getCart();
+            if ($cart) {
+                foreach ($cart->getItems() as $item) {
+                    if ($item->getProduct()->getId() === $product->getId()) {
+                        if ($item->getQuantity() > 1) {
+                            $item->setQuantity($item->getQuantity() - 1);
+                        } else {
+                            $em->remove($item);
+                        }
+                        break;
+                    }
+                }
+                $em->flush();
+            }
         } else {
-            $session->set('panier', $panier);
-            return $this->redirectToRoute('app_cart');
+            $panier = $session->get('panier', []);
+            $id = $product->getId();
+
+            if (isset($panier[$id])) {
+                if ($panier[$id] > 1) {
+                    $panier[$id]--;
+                } else {
+                    unset($panier[$id]);
+                }
+                $session->set('panier', $panier);
+            }
         }
 
-
+        return $this->redirectToRoute('app_cart');
     }
+
 
     #[Route('/alerte/{id}', name: 'alerte_stock')]
     public function alerteStock(Product $product, Request $request, EntityManagerInterface $em): Response
@@ -178,14 +292,29 @@ final class CartController extends AbstractController
     }
 
     #[Route('/clear', name: 'cart_clear')]
-    public function clear( SessionInterface $session): Response
-    {
-        $session->remove('panier');
+    public function clear(
+        SessionInterface $session,
+        Security $security,
+        EntityManagerInterface $em
+    ): Response {
+        $user = $security->getUser();
+
+        if ($user) {
+            $cart = $user->getCart();
+            if ($cart) {
+                foreach ($cart->getItems() as $item) {
+                    $em->remove($item);
+                }
+                $em->flush();
+            }
+        } else {
+            $session->remove('panier');
+        }
+
         $session->remove('coupon');
         return $this->redirectToRoute('app_cart');
-
-
     }
+
 
 
 }
