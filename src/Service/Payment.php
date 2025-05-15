@@ -2,9 +2,11 @@
 
 namespace App\Service;
 
+use App\Entity\Cart;
 use App\Entity\Coupon;
 use App\Entity\Order;
 use App\Entity\OrderDetail;
+use App\Entity\User;
 use App\Form\AdressForm;
 use App\Form\ConfirmAddressForm;
 use App\Form\Model\AddressData;
@@ -14,6 +16,7 @@ use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -30,7 +33,7 @@ class Payment
 {
     private SessionInterface $session;
     public function __construct(RequestStack $requestStack,private StripePayment $stripePayment,private LoggerInterface $logger,
-    private EntityManagerInterface $entityManager,private OrderRepository $orderRepository,
+    private EntityManagerInterface $entityManager,private OrderRepository $orderRepository,private Security $security,
     private ProductRepository $pRepository, private UrlGeneratorInterface $urlGenerator, private FormFactoryInterface $formFactory, private Environment $twig)
     {
         $this->session = $requestStack->getSession();
@@ -52,11 +55,23 @@ class Payment
     public function getProductsFromCart()
     {
 
-        $panier = $this->session->get("panier");
+        $user=$this->security->getUser();
         $products = [];
-        foreach ($panier as $produitId => $quantite) {
-            $produit = $this->pRepository->find($produitId);
-            $products[] = ["produit" => $produit, "quantite" => $quantite];
+        if($user){
+            $panier=$this->entityManager->getRepository(Cart::class)->findOneBy(['user' => $user->getId()]);
+            $panierItems =$panier->getItems();
+            foreach ($panierItems as $item){
+                $product=$this->pRepository->find($item->getProduct()->getId());
+                $quantite=$item->getQuantity();
+                $products[]=["produit" => $product, "quantite" => $quantite];
+            }
+        }
+        else{
+            $panier = $this->session->get("panier");
+            foreach ($panier as $produitId => $quantite) {
+                $produit = $this->pRepository->find($produitId);
+                $products[] = ["produit" => $produit, "quantite" => $quantite];
+            }
         }
         return $products;
 
@@ -86,27 +101,27 @@ class Payment
             return new RedirectResponse($url);
 
     }
-    public function lastTouches(Order $order,$step,$form,$discount){
+    public function lastTouches(Order $order,$step,$form){
         $cart=$this->getCartDetails();
         $shipping=20;
+        $valur=(float)$cart["totalAmount"]+$shipping-(float)$cart["discount"];
         $exemple = [
             'items' => [
                 [
-                    'label' => "Subtotal (".$cart["totalQuantity"]." item)",
+                    'label' => "Sous-total (".$cart["totalQuantity"]." articles)",
                     'value' => "".$cart["totalAmount"]." TND",
                 ],
                 [
-                    'label' => 'Shipping',
+                    'label' => 'Livraison',
                     'value' => $shipping.' DT',
-                    'tooltip' => 'Standard shipping (3-5 business days)'
                 ],
                 [
-                    'label' => 'Additional discount(s)',
-                    'value' => '-'.$discount.' DT',
+                    'label' => 'Réduction',
+                    'value' => '-'.(float)$cart["discount"].' DT',
                     'value_class' => 'text-danger'
                 ]
             ],
-            'total' => $cart["totalAmount"]+$shipping-$cart["discount"].' DT'
+            'total' =>$valur.' DT'
         ];
 
         $html = $this->twig->render('order/new.html.twig', [
@@ -219,10 +234,28 @@ class Payment
         $cart = $this->getCartDetails();
         $order->setCreatedAt(new \DateTime());
         $order->setStatus('pending');
+        $user=$this->security->getUser();
+        if($user){
+            $order->setUser($this->entityManager->getRepository(User::class)->find($user->getId()));
+        }
         $this->entityManager->persist($order);
-        $this->entityManager->flush();
         $this->session->remove("order");
+        if($user){
+            $this->logger->info("user exist ");
+            $panier=$this->entityManager->getRepository(Cart::class)->findOneBy(['user' => $user->getId()]);
+            if ($panier) {
+                $this->logger->info("panier exist ".$panier->getId());
+                foreach ($panier->getItems() as $item) {
+                    $this->entityManager->remove($item);
+                }
+                $this->entityManager->flush();
+
+            }
+
+        }
+        $this->entityManager->flush();
         $this->session->remove("panier");
+        $this->entityManager->flush();
         $this->session->getFlashBag()->add("sucess","payment is pending");
     }
     public function managePayment(Request $request,int $step)
@@ -246,12 +279,6 @@ class Payment
             $order->setTotalAmount($cart["totalAmount"]);
             $order->setTotalQuantity($cart["totalQuantity"]);
 
-
-            //check if user is authenticated
-            //if yes
-            //get his email
-            //$order->setUser($email);
-            //if no ->okk
         }
 
         $discount=0;
@@ -278,14 +305,17 @@ class Payment
                         return new RedirectResponse($url);
                     }
                 }
-            //if c stripe -> deal with stripe sinon deal with flouci
-            //by dealing: send the needed data to them then once they respond will just use another route
             break;
             case 2:
                 if(!$this->session->has('address'))
-                {$addressF=new AddressData();}
+                {$addressF=new AddressData();
+                }
                 else{
                     $addressF=$this->session->get("address");
+                }
+                $user=$this->security->getUser();
+                if($user){
+                    $addressF->email=$user->getEmail();
                 }
                 $form = $this->formFactory->create(AdressForm::class, $addressF);
                 $form->handleRequest($request);
@@ -320,5 +350,8 @@ class Payment
         return $this->lastTouches($order,$step,$form,$discount);
 
     }
+
+
+
 
 }

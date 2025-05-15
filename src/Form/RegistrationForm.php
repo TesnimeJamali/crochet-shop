@@ -43,11 +43,6 @@ class RegistrationForm extends AbstractType
                     new NotBlank(['message' => 'Veuillez entrer votre numéro de téléphone.']),
                 ],
             ])
-            ->add('adresse', TextType::class, [ // Ajout du champ adresse
-                'constraints' => [
-                    new NotBlank(['message' => 'Veuillez entrer votre adresse.']),
-                ],
-            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [

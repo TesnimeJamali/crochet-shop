@@ -23,14 +23,13 @@
                                         <div class="card-body">
                                             <h5 class="card-title">{{ product.name }}</h5>
                                             <p class="card-text">
-                                                <strong>Price:</strong> {{ product.price}} DT<br>
-                                                <strong>Sold:</strong> {{ product.totalQuantity }}
+                                                <strong>Prix:</strong> {{ product.price}} DT<br>
                                             </p>
                                         </div>
 
                                         <div class="card-footer bg-white">
                                             <a href="{{ path('add', {'id': product.id}) }}">
-                                                <span class="btn custom-cart-btn">Add to Cart</span>
+                                                <span class="btn custom-cart-btn">Ajouter au panier</span>
                                             </a>
                                         </div>
                                     </div>
@@ -44,11 +43,11 @@
             {# Carousel Controls #}
             <button class="carousel-control-prev" type="button" data-bs-target="#productsCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+                <span class="visually-hidden">Precident</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#productsCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+                <span class="visually-hidden">Suivant</span>
             </button>
         </div>
     </div>

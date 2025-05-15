@@ -49,6 +49,9 @@ class Order
     #[ORM\OneToMany(targetEntity: OrderDetail::class, mappedBy: '`order`',cascade: ['persist'])]
     private Collection $orderDetails;
 
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->orderDetails = new ArrayCollection();
@@ -190,5 +193,17 @@ class Order
     public function setPaymentIntent(?string $payment_intent): void
     {
         $this->paymentIntentId = $payment_intent;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

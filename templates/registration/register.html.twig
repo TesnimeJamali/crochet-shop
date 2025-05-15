@@ -4,60 +4,156 @@
 {% block title %}S'inscrire{% endblock %}
 
 {% block body %}
-<div class="container">
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 bg-white-soft">
+                    <div class="card-body p-5">
 
-    <h1>S'inscrire</h1>
+                        <h2 class="mb-4 text-center text-primary-soft fw-light">Créer un compte</h2>
 
-    {{ form_errors(registrationForm) }}
+                        {% for flash_error in app.flashes('verify_email_error') %}
+                            <div class="alert alert-danger small rounded-3" role="alert">{{ flash_error }}</div>
+                        {% endfor %}
 
-    {{ form_start(registrationForm) }}
-    <div class="form-group">
-        {{ form_label(registrationForm.email, 'Email') }}
-        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(registrationForm.email) }}
+                        {{ form_start(registrationForm, {'attr': {'class': 'needs-validation'}}) }}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form_label(registrationForm.prenom, null, {'label_attr': {'class': 'form-label text-muted small'}}) }}
+                                    {{ form_widget(registrationForm.prenom, {'attr': {
+                                        'class': 'form-control bg-light border-0 shadow-sm rounded-3',
+                                        'placeholder': 'Prénom'
+                                    }}) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(registrationForm.prenom) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    {{ form_label(registrationForm.nom, null, {'label_attr': {'class': 'form-label text-muted small'}}) }}
+                                    {{ form_widget(registrationForm.nom, {'attr': {
+                                        'class': 'form-control bg-light border-0 shadow-sm rounded-3',
+                                        'placeholder': 'Nom'
+                                    }}) }}
+                                    <div class="invalid-feedback">
+                                        {{ form_errors(registrationForm.nom) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.email, null, {'label_attr': {'class': 'form-label text-muted small'}}) }}
+                            {{ form_widget(registrationForm.email, {'attr': {
+                                'class': 'form-control bg-light border-0 shadow-sm rounded-3',
+                                'placeholder': 'email@example.com'
+                            }}) }}
+                            <div class="invalid-feedback">
+                                {{ form_errors(registrationForm.email) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.telephone, null, {'label_attr': {'class': 'form-label text-muted small'}}) }}
+                            {{ form_widget(registrationForm.telephone, {'attr': {
+                                'class': 'form-control bg-light border-0 shadow-sm rounded-3',
+                                'placeholder': 'xx xxx xxx'
+                            }}) }}
+                            <div class="invalid-feedback">
+                                {{ form_errors(registrationForm.telephone) }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.plainPassword, null, {'label_attr': {'class': 'form-label text-muted small'}}) }}
+                            {{ form_widget(registrationForm.plainPassword, {'attr': {
+                                'class': 'form-control bg-light border-0 shadow-sm rounded-3',
+                                'placeholder': '••••••••'
+                            }}) }}
+                            <div class="invalid-feedback">
+                                {{ form_errors(registrationForm.plainPassword) }}
+                            </div>
+                            <small class="text-muted">Minimum 8 caractères</small>
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_label(registrationForm.agreeTerms, null, {'label_attr': {'class': 'form-check-label small'}}) }}
+                            <div class="invalid-feedback">
+                                {{ form_errors(registrationForm.agreeTerms) }}
+                            </div>
+                        </div>
+
+                        <div class="row gx-2">
+                            <div class="col-3">
+                                <a href="{{ path('app_welcome') }}" class="btn btn-outline-secondary rounded-3 w-100">
+                                    Annuler
+                                </a>
+                            </div>
+                            <div class="col-8 ms-auto">
+                                <button class="btn btn-primary-soft rounded-3 w-100 py-2" type="submit">
+                                    S'inscrire
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-center small text-muted mt-3">
+                            Déjà un compte ? <a href="{{ path('app_login') }}" class="text-primary-soft text-decoration-none">Se connecter</a>
+                        </div>
+
+                        {{ form_end(registrationForm) }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        {{ form_label(registrationForm.nom, 'Nom') }}
-        {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(registrationForm.nom) }}
-    </div>
+    <style>
+        :root {
+            --blue-pastel: #D0E8F2;
+            --rose-pastel: #F8D4DC;
+            --gray-text: #555;
+            --white-soft: #FCFCFC;
+            --light-gray: #EAEAEA;
+        }
 
-    <div class="form-group">
-        {{ form_label(registrationForm.prenom, 'Prénom') }}
-        {{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(registrationForm.prenom) }}
-    </div>
+        body {
+            background-color: var(--blue-pastel);
+            font-family: 'Poppins', sans-serif;
+        }
 
-    <div class="form-group">
-        {{ form_label(registrationForm.telephone, 'Téléphone') }}
-        {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(registrationForm.telephone) }}
-    </div>
+        .text-primary-soft {
+            color: var(--rose-pastel);
+        }
 
-    <div class="form-group">
-        {{ form_label(registrationForm.adresse, 'Adresse') }}
-        {{ form_widget(registrationForm.adresse, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(registrationForm.adresse) }}
-    </div>
+        .btn-primary-soft {
+            background-color: var(--rose-pastel);
+            color: #fff;
+            border: none;
+            transition: all 0.3s ease;
+        }
 
-    <div class="form-group">
-        {{ form_label(registrationForm.plainPassword, 'Mot de passe') }}
-        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
-        {{ form_errors(registrationForm.plainPassword) }}
-    </div>
+        .btn-primary-soft:hover {
+            background-color: #e7bbc6;
+        }
 
-    <div class="form-group">
-        {{ form_label(registrationForm.agreeTerms) }}
-        {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
-        {{ form_errors(registrationForm.agreeTerms) }}
-    </div>
+        .bg-white-soft {
+            background-color: var(--white-soft);
+        }
+        .form-check-input:checked {
+            background-color: var(--rose-pastel);
+            border-color: var(--rose-pastel);
+        }
 
-    <button type="submit" class="btn btn-primary">S'inscrire</button>
-    <a href="{{ path('app_welcome') }}" class="btn btn-secondary">Annuler</a> {# Ajout du bouton Annuler #}
-    {{ form_end(registrationForm) }}
-</div>
+        .btn-outline-secondary {
+            border-color: #dee2e6;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
 {% endblock %}

@@ -17,6 +17,7 @@ use App\Service\StripePayment;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,8 +30,7 @@ final class OrderController extends AbstractController
     #[Route(name: 'app_order_index', methods: ['GET'])]
     public function index(OrderRepository $orderRepository): Response
     {
-        //if he's not connected send him back to login with a flashBag faites un login pour pouvoir voir vos commandes
-        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         return $this->render('order/index.html.twig');
     }
@@ -38,17 +38,16 @@ final class OrderController extends AbstractController
     #[Route('/filtered/{status}?paid',name: 'app_order_filtered', methods: ['GET'])]
     public function filter(OrderRepository $orderRepository,$status): Response
     {
-        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        // /** @var \App\Entity\User $user */
-       // $user = $this->getUser();
+         /** @var \App\Entity\User $user */
+        $user = $this->getUser();
 
-        //$orders = $orderRepository->findBy(['user' => $user ,'status' => $status], ['createdAt' => 'DESC']);
-
-        $orders=$orderRepository->findBy(['status'=>$status],['createdAt'=>'DESC']);
+        $orders = $orderRepository->findBy(['user' => $user->getId() ,'status' => $status], ['createdAt' => 'DESC']);
+        $stat=$status=="paid"?"payée":($status=="pending"?"en attente":"annulée");
         return $this->render('order/ordersTable.html.twig', [
             'orders' => $orders,
-            'status' => $status,
+            'status' => $stat,
         ]);
     }
 
@@ -77,8 +76,9 @@ final class OrderController extends AbstractController
 
 
     #[Route('/newOrder/{step<\d>?1}', name: 'app_order_new', methods: ['GET', 'POST'])]
-    public function new(Request $request,$step,Payment $payment): Response
+    public function new(Request $request,$step,Payment $payment,Security $security): Response
     {
+
         return $payment->managePayment($request,$step);
     }
 

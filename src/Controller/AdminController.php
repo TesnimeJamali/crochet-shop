@@ -30,6 +30,7 @@ class AdminController extends AbstractController
     #[Route('/', name: 'admin_products')]
     public function index(ProductRepository $productRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $products = $productRepository->findAll();
         return $this->render('admin/products.html.twig', ['products' => $products]);
     }
@@ -37,6 +38,7 @@ class AdminController extends AbstractController
     #[Route('/new', name: 'admin_product_new')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
 
@@ -59,6 +61,8 @@ class AdminController extends AbstractController
         AlerteStockRepository $alerteStockRepository,
         MailerInterface $mailer
     ): Response {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $oldQuantity = $product->getQuantity();
 
         $form = $this->createForm(ProductType::class, $product);
@@ -102,6 +106,7 @@ class AdminController extends AbstractController
     #[Route('/{id}/delete', name: 'admin_product_delete')]
     public function delete(Product $product, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $em->remove($product);
         $em->flush();
         return $this->redirectToRoute('admin_products');
@@ -109,6 +114,7 @@ class AdminController extends AbstractController
     #[Route('/carousel/upload', name: 'admin_carousel_upload')]
     public function uploadCarousel(Request $request, EntityManagerInterface $em, ImageCarouselRepository $repo): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $carouselImage = new ImageCarousel();
         $form = $this->createForm(ImageCarouselTypeForm::class, $carouselImage);
         $form->handleRequest($request);
@@ -134,6 +140,7 @@ class AdminController extends AbstractController
         Request $request,
         EntityManagerInterface $em
     ): Response {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if ($this->isCsrfTokenValid('delete' . $image->getId(), $request->request->get('_token'))) {
             // Optional: remove the image file from the server
             $imagePath = $this->getParameter('carousel_directory') . '/' . $image->getImageName();

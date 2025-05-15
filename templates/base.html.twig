@@ -49,9 +49,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('shop') }}">Shop</a>
                 </li>
+                {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('admin_products') }}">Admin</a>
                 </li>
+                {% endif %}
             </ul>
 
             {# RIGHT: Icons #}
@@ -62,21 +64,36 @@
                         <i class="fa-solid fa-magnifying-glass" style="color: #fff;"></i>
                     </a>
                 </li>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="fa-solid fa-heart" style="color: #fff;"></i>
                     </a>
                 </li>
+                {% endif %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-user" style="color: #fff;"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{{ path('app_login') }}">Se connecter</a></li>
-                        <li><a class="dropdown-item" href="{{ path('app_register') }}">S'inscrire</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                        {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <li><a class="dropdown-item py-2" href="{{ path('app_login') }}">
+                                    <i class="fa-solid fa-right-to-bracket me-2 " style="color: #8bd1d2"></i><span class="fw-medium">Se connecter</span>
+                                </a></li>
+                            <li><a class="dropdown-item py-2" href="{{ path('app_register') }}">
+                                    <i class="fa-solid fa-user-plus me-2 " style="color: #ffd1dc;"></i><span class="fw-medium">S'inscrire</span>
+                                </a></li>
+                        {% else %}
+                            <li>
+                                <a class="dropdown-item py-2" href="{{ path('app_profile') }}"><i class="fa-solid fa-user-gear me-2 " style="color: #8bd1d2"></i><span class="fw-medium">Mon profil</span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li><a class="dropdown-item py-2 text-danger" href="{{ path('app_logout') }}">
+                                    <i class="fa-solid fa-power-off me-2"></i><span class="fw-medium">Se déconnecter</span>
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </li>
                 <li class="nav-item">

@@ -14,7 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class ProfileController extends AbstractController
 {
-    #[Route('/profile', name: 'app_profile')]
+    #[Route('/profileA', name: 'app_profileA')]
     #[IsGranted('ROLE_USER')] // Sécurise l'accès, uniquement pour les utilisateurs connectés
     public function index(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
     {
@@ -43,6 +43,13 @@ class ProfileController extends AbstractController
             'profileForm' => $form->createView(),
             'user' => $user, // Passe l'utilisateur à la vue pour afficher les infos
         ]);
+    }
+    #[Route('/profile', name: 'app_profile')]
+    #[IsGranted('ROLE_USER')]
+    public function monProfil(Request $request, EntityManagerInterface $entityManager)
+    {
+        $user = $this->getUser();
+        return $this->render('profile/monProfil.html.twig', ["user"=>$user]);
     }
 }
 

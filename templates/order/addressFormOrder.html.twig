@@ -19,7 +19,6 @@
         </div>
     </div>
 
-    {% if not app.session.has("email") %}
     <div class="mb-4">
         <div class="form-floating">
         {{ form_widget(form.email, {
@@ -28,7 +27,7 @@
             <label for="{{ form.first_name.vars.id }}" style="color: #6c757d;">Email </label>
         </div>
     </div>
-    {% endif %}
+
 
     <div class="mb-4">
         <div class="form-floating">
