@@ -37,6 +37,7 @@ final class CartController extends AbstractController
         $info_panier = [];
         $total = 0;
         $coupon = null;
+        $discount = 0;
 
         if ($user) {
             $cart = $user->getCart();
@@ -64,7 +65,6 @@ final class CartController extends AbstractController
             $em->flush();
         } else {
             $panier = $session->get('panier', []);
-
             foreach ($panier as $id => $quantite) {
                 $product = $productRepository->find($id);
                 if ($product) {
@@ -75,19 +75,40 @@ final class CartController extends AbstractController
                     $total += $product->getPrice() * $quantite;
                 }
             }
-
-            $couponId = $session->get('coupon');
-            if ($couponId) {
-                $coupon = $couponRepository->find($couponId);
+        }
+        $couponId = $session->get('coupon');
+        if ($couponId) {
+            $coupon = $couponRepository->find($couponId);
+        }
+        if ($user && $coupon) {
+            $cart->setCoupon($coupon);
+            $em->persist($cart);
+            $em->flush();
+        }
+        $totalAvecReduction = $total;
+        if ($coupon) {
+            if ($coupon->getValidUntil() >= new \DateTime()) {
+                $discount = $total * ($coupon->getDiscount() / 100);
+                $totalAvecReduction = $total - $discount;
+            } else {
+                $session->remove('coupon');
+                if ($user) {
+                    $cart->setCoupon(null);
+                    $em->persist($cart);
+                    $em->flush();
+                }
+                $this->addFlash('warning', 'Le coupon a expiré.');
             }
         }
-
         return $this->render('cart/index.html.twig', [
             'info_panier' => $info_panier,
             'total' => $total,
-            'coupon' => $coupon
+            'coupon' => $coupon,
+            'discount' => $discount,
+            'totalAfterDiscount' => $totalAvecReduction,
         ]);
     }
+
 
     #[Route('/add/{id}', name: 'add')]
     public function add(
@@ -287,7 +308,6 @@ final class CartController extends AbstractController
             $session = $request->getSession();
             $session->set('coupon', $coupon->getId());
         }
-
         return $this->redirectToRoute('app_cart');
     }
 
@@ -314,7 +334,4 @@ final class CartController extends AbstractController
         $session->remove('coupon');
         return $this->redirectToRoute('app_cart');
     }
-
-
-
 }

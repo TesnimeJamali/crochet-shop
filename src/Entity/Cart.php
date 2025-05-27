@@ -19,6 +19,12 @@ class Cart
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+
+
+    #[ORM\ManyToOne(targetEntity: Coupon::class)]
+    #[ORM\JoinColumn(name: 'coupon_id', referencedColumnName: 'id', nullable: true)]
+    private ?Coupon $coupon = null;
+
     #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $items;
 
@@ -128,4 +134,18 @@ class Cart
 
         return null;
     }
+
+    public function getCoupon(): ?Coupon{
+        return $this->coupon;
+    }
+    public function setCoupon(?Coupon $coupon): static{
+        $this->coupon = $coupon;
+        return $this;
+    }
+
+
+
+
+
+
 }

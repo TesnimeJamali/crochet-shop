@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un coupon{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4" style="background-color: #fefefe;">
+                    <div class="card-header text-center py-3 rounded-top-4" style="background-color: #e3f3f8;">
+                        <h3 class="fw-light mb-0" style="color: #5a6d80;">
+                            <i class="fas fa-ticket-alt me-2" style="color: #8bc1d4;"></i>
+                            Ajouter un coupon
+                        </h3>
+                    </div>
+                    <div class="card-body px-4 py-4">
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                        <div class="mb-3">
+                            {{ form_label(form.code) }}
+                            {{ form_widget(form.code, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.code) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.discount) }}
+                            {{ form_widget(form.discount, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.discount) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.validUntil) }}
+                            {{ form_widget(form.validUntil, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.validUntil) }}
+                        </div>
+                        <div class="text-center mt-4">
+                            <button class="btn btn-outline-secondary rounded-pill px-4">
+                                <i class="fas fa-plus-circle me-2"></i> Ajouter le coupon
+                            </button>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        body {
+            background-color: #f4f9fb;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+        }
+
+        .card {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-outline-secondary {
+            border: 1px solid #d0e8f2;
+            color: #5a6d80;
+            background-color: #fff;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f0f4f8;
+            color: #4a5b6d;
+        }
+    </style>
+{% endblock %}
+

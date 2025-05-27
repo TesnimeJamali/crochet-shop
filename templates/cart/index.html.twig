@@ -13,7 +13,9 @@
             </div>
         {% else %}
             <div class="list-group">
+
                 {% for item in info_panier %}
+
                     <div class="list-group-item py-4 px-3 mb-3 shadow-sm rounded d-flex flex-column flex-md-row align-items-md-center justify-content-between">
                         <div class="d-flex align-items-center mb-3 mb-md-0">
                             <img src="{{ asset('uploads/products/' ~ item.produit.imageName) }}" alt="{{ item.produit.name }}" class="me-4 rounded shadow-sm border" style="width: 100px; height: 100px; object-fit: cover;">
@@ -70,17 +72,17 @@
                         <h3 class="text-muted mb-0" style="text-decoration: line-through;">
                             {{ total|number_format(2, '.', ' ') }} DT
                         </h3>
-                        {% set remise = total * coupon.discount / 100 %}
                         <h3 class="text-success mb-0">
-                            {{ (total - remise)|number_format(2, '.', ' ') }} DT
+                            {{ totalAfterDiscount|number_format(2, '.', ' ') }} DT
                         </h3>
                     {% else %}
                         <h3 class="text-dark mb-0">
                             {{ total|number_format(2, '.', ' ') }} DT
                         </h3>
                     {% endif %}
-
                 </div>
+            </div>
+
             </div>
             <div class="card mt-5 border-0 shadow-sm" style="background-color: #fff0f5;">
                 <div class="card-header d-flex align-items-center" style="background-color: #fce4ec;">

@@ -3,8 +3,10 @@ namespace App\Controller;
 
 
 use App\Controller\ImageCarouselController;
+use App\Entity\Coupon;
 use App\Entity\Product;
 use App\Entity\ImageCarousel;
+use App\Form\AddCouponFormType;
 use App\Form\ProductType;
 use App\Form\ImageCarouselForm;
 use App\Form\ImageCarouselTypeForm;
@@ -155,5 +157,21 @@ class AdminController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_carousel_upload');
+    }
+    #[Route('/coupon', name: 'ajout_coupon')]
+    public function coupon(Request $request, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $coupon = new Coupon();
+        $form = $this->createForm(AddCouponFormType::class, $coupon);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($coupon);
+            $em->flush();
+            $this->addFlash('success', 'coupon ajouté avec succés.');
+            return $this->redirectToRoute('admin_products');
+        }
+
+        return $this->render('admin/coupon.html.twig', ['form' => $form->createView()]);
     }
 }
