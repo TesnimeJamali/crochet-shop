@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\ProfileFormType; // Créer ce formulaire
+use App\Form\ProfileTypeForm;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,10 +46,26 @@ class ProfileController extends AbstractController
     }
     #[Route('/profile', name: 'app_profile')]
     #[IsGranted('ROLE_USER')]
-    public function monProfil(Request $request, EntityManagerInterface $entityManager)
+    public function monProfil(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         return $this->render('profile/monProfil.html.twig', ["user"=>$user]);
+    }
+
+    #[Route('/profil/modifier', name: 'app_profile_edit')]
+    public function edit(Request $request, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(ProfileTypeForm::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Votre profil est mis à jour.');
+            return $this->redirectToRoute('app_profile_edit');
+        }
+        return $this->render('profile/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
 

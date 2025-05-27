@@ -4,33 +4,38 @@
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <div class="card border-0 shadow-sm rounded-4" style="background-color: #f8f9fa;">
-                    <div class="card-header border-0 rounded-top-4 py-3" style="background-color: #d0e8f2;">
-                        <h2 class="mb-0 text-center fw-light" style="color: #5a6d80;">Mon Profil</h2>
+                <div class="card border-0 shadow-sm rounded-4" style="background-color: #fefefe;">
+                    <div class="card-header text-center py-3 rounded-top-4" style="background-color: #e3f3f8;">
+                        <h3 class="fw-light mb-0" style="color: #5a6d80;">
+                            <i class="fas fa-id-badge me-3" style="color: #8bc1d4;"></i>
+                            Bienvenue sur votre espace personnel
+                        </h3>
                     </div>
-                    <div class="card-body p-4">
-                        <div class="row g-3">
-                            <div class="col-md-8">
-                                <div class="mb-3 p-3 rounded-3" style="background-color: #fff; border: 1px solid #d0e8f2;">
-                                    <h4 class="mb-3" style="color: #5a6d80;">
-                                        <i class="fas fa-user-circle me-2" style="color: #f8d4dc;"></i>{{ app.user.prenom }} {{ app.user.nom }}
-                                    </h4>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fas fa-envelope me-2" style="color: #f8d4dc;"></i><span>{{ app.user.email }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <i class="fas fa-phone me-2" style="color: #f8d4dc;"></i><span>{{ app.user.telephone }}</span>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="card-body px-4 py-3">
+                        <div class="mb-3">
+                            <h5 class="mb-1" style="color: #5a6d80;">
+                                <i class="fas fa-user-circle me-2" style="color: #f8d4dc;"></i>
+                                {{ app.user.prenom }} {{ app.user.nom }}
+                            </h5>
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-envelope me-2" style="color: #f8d4dc;"></i>
+                                {{ app.user.email }}
+                            </p>
+                            <p class="text-muted small mb-0">
+                                <i class="fas fa-phone me-2" style="color: #f8d4dc;"></i>
+                                {{ app.user.telephone }}
+                            </p>
                         </div>
 
-                        <div class="text-center mt-4">
-                            <a href="{{ path('app_order_index') }}" class="btn btn-lg rounded-pill px-4 py-2" style="background-color: #f8d4dc; color: #5a6d80; border: none;">
-                                <i class="fas fa-shopping-bag me-2"></i> Voir mes commandes
+                        <div class="d-flex flex-wrap gap-2 justify-content-center mt-4">
+                            <a href="{{ path('app_order_index') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
+                                <i class="fas fa-shopping-bag me-2"></i>Mes Commandes
                             </a>
-                            <a href="{{ path('app_cart') }}" class="btn btn-lg rounded-pill px-4 py-2" style="background-color: #f8d4dc; color: #5a6d80; border: none;">
-                                <i class="fas fa-shopping-cart me-2"></i> Voir mon panier
+                            <a href="{{ path('app_cart') }}" class="btn btn-outline-secondary btn-sm rounded-pill">
+                                <i class="fas fa-shopping-cart me-2"></i>Mon Panier
+                            </a>
+                            <a href="{{ path('app_profile_edit') }}"  class="btn btn-outline-secondary btn-sm rounded-pill">
+                                <i class="fas fa-user-edit me-2"></i>Modifier Profil
                             </a>
                         </div>
                     </div>
@@ -38,32 +43,31 @@
             </div>
         </div>
     </div>
+
     <style>
         body {
-            background-color: #f0f7fa;
+            background-color: #f4f9fb;
             font-family: 'Poppins', sans-serif;
+            font-size: 14px;
         }
 
         .card {
-            transition: transform 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
         }
 
         .card:hover {
-            transform: translateY(-5px) scale(1.01);
+            transform: translateY(-3px);
         }
 
-        .btn:hover {
-            background-color: #e7c1cb !important;
-            color: #4a5b6d !important;
+        .btn-outline-secondary {
+            border: 1px solid #d0e8f2;
+            color: #5a6d80;
+            background-color: #fff;
         }
 
-        .badge {
-            font-weight: normal;
-            text-transform: capitalize;
+        .btn-outline-secondary:hover {
+            background-color: #f0f4f8;
+            color: #4a5b6d;
         }
-
     </style>
 {% endblock %}
-
-

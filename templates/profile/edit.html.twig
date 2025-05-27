@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 bg-white hover-card">
+                    <div class="card-header text-center py-3" style="border-top-left-radius: 1rem; border-top-right-radius: 1rem; background-color: #e3f3f8;">
+                        <h3 class="fw-light mb-0" style="color: #5a6d80;">
+                            <i class="fas fa-user-edit me-2" style="color: #8bc1d4;"></i>
+                            Modifier mon profil
+                        </h3>
+                    </div>
+                    <div class="card-body px-4 py-4">
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                        <div class="mb-3">
+                            {{ form_label(form.prenom) }}
+                            {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.prenom) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.nom) }}
+                            {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.telephone) }}
+                            {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.telephone) }}
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-outline-secondary rounded-pill px-4">
+                                <i class="fas fa-save me-2"></i>Enregistrer les modifications
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        body {
+            background-color: #f4f9fb;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+        }
+
+        .hover-card {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .hover-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-outline-secondary {
+            border: 1px solid #d0e8f2;
+            color: #5a6d80;
+            background-color: #fff;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f0f4f8;
+            color: #4a5b6d;
+        }
+    </style>
+{% endblock %}

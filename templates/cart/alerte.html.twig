@@ -3,16 +3,19 @@
 {% block title %}Alerte Stock{% endblock %}
 
 {% block body %}
-    <div class="container my-5">
+    <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-8 col-12">
-                <div class="card shadow-sm border-0 rounded-lg">
-                    <div class="card-header text-center bg-light">
-                        <h5 class="fw-semibold text-dark mb-0">Recevez une alerte dès que ce produit est de nouveau en stock</h5>
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4" style="background-color: #fefefe;">
+                    <div class="card-header text-center py-3 rounded-top-4" style="background-color: #e3f3f8;">
+                        <h5 class="fw-semibold mb-0" style="color: #5a6d80;">
+                            Recevez une alerte dès que ce produit est de nouveau en stock
+                        </h5>
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted text-center mb-4">Entrez votre email pour être averti dès la disponibilité du produit.</p>
-
+                    <div class="card-body px-4 py-4">
+                        <p class="text-muted text-center mb-4">
+                            Entrez votre email pour être averti dès la disponibilité du produit.
+                        </p>
                         {{ form_start(form) }}
                         <div class="mb-3">
                             {{ form_label(form.email, 'Votre email', {'label_attr': {'class': 'form-label'}}) }}
@@ -25,16 +28,15 @@
                             }) }}
                         </div>
 
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg px-4 py-2">
-                                Être averti
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-outline-secondary rounded-pill px-4 py-2">
+                                <i class="fas fa-bell me-2"></i>Être averti
                             </button>
                         </div>
                         {{ form_end(form) }}
-
                         <div class="text-center mt-4">
-                            <a href="{{ path('app_cart') }}" class="btn btn-outline-secondary btn-lg">
-                                <i class="bi bi-arrow-left-circle"></i> Revenir vers mon panier
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg rounded-pill px-4 py-2">
+                                <i class="bi bi-arrow-left-circle me-2"></i> Revenir en arrière
                             </a>
                         </div>
                     </div>
@@ -42,4 +44,31 @@
             </div>
         </div>
     </div>
+
+    <style>
+        body {
+            background-color: #f4f9fb;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+        }
+
+        .card {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-outline-secondary {
+            border: 1px solid #d0e8f2;
+            color: #5a6d80;
+            background-color: #fff;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f0f4f8;
+            color: #4a5b6d;
+        }
+    </style>
 {% endblock %}
