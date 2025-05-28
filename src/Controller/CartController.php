@@ -343,6 +343,7 @@ final class CartController extends AbstractController
                 foreach ($cart->getItems() as $item) {
                     $em->remove($item);
                 }
+                $cart->setCoupon(null);
                 $em->flush();
             }
         } else {
