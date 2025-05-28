@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contactez-nous ✨{% endblock %}
+{% block title %}Contactez-nous{% endblock %}
 
 {% block body %}
     <div class="container py-5">
@@ -19,31 +19,28 @@
                             <div class="col-md-6 mb-4">
                                 <div class="p-4 bg-pink-light rounded" style="background-color: #fff0f6;">
                                     <h3 class="h5"><i class="fas fa-envelope me-2" style="color: #fdb2b2;"></i> Email</h3>
-                                    <p>contact@crochetdor.com</p>
+                                    <p>crochetdor.tn@gmail.com</p>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="p-4 bg-pink-light rounded" style="background-color: #fff0f6;">
                                     <h3 class="h5"><i class="fas fa-phone-alt me-2" style="color: #fdb2b2;"></i> Téléphone</h3>
-                                    <p>+33 1 23 45 67 89</p>
+                                    <p>+216 28 28 44 28</p>
                                 </div>
                             </div>
                         </div>
 
-                        <form class="mt-4">
-                            <div class="mb-3">
-                                <input type="text" class="form-control py-3" placeholder="Votre nom" style="border-radius: 20px; border-color: #ffb6c1;">
-                            </div>
-                            <div class="mb-3">
-                                <input type="email" class="form-control py-3" placeholder="Votre email" style="border-radius: 20px; border-color: #ffb6c1;">
-                            </div>
-                            <div class="mb-3">
-                                <textarea class="form-control py-3" rows="4" placeholder="Votre message ..." style="border-radius: 20px; border-color: #ffb6c1;"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-pink btn-lg px-4 py-2 rounded-pill">
-                                Envoyer <i class="fas fa-paper-plane ms-2"></i>
-                            </button>
-                        </form>
+                        {{ form_start(form) }}
+                        {{ form_row(form.name) }}
+                        {{ form_row(form.email) }}
+                        {{ form_row(form.message) }}
+
+                        {# Rendre le bouton submit avec le widget, et ajouter classes et icône #}
+                        {{ form_widget(form.submit, {
+                            'attr': {'class': 'btn btn-pink btn-lg px-4 py-2 rounded-pill'}
+                        }) }}
+                        {{ form_end(form) }}
+
                     </div>
                 </div>
 
@@ -58,7 +55,50 @@
     </div>
 
     <style>
-        .text-pink { color: #fdb2b2; }
+
+
+        form label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block;
+            color: #333;
+        }
+
+        form input[type="text"],
+        form input[type="email"],
+        form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            border: 1px solid #ffc9c9;
+            font-size: 16px;
+            background-color: #fff0f5;
+            transition: all 0.3s ease;
+        }
+
+        form input:focus,
+        form textarea:focus {
+            outline: none;
+            border-color: #f4978e;
+            box-shadow: 0 0 8px rgba(244, 151, 142, 0.3);
+            background-color: #fff;
+        }
+
+        .btn-pink {
+            background-color: #f4978e;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-pink:hover {
+            background-color: #e87d75;
+        }
         .btn-pink {
             background-color: #fdb2b2;
             color: white;

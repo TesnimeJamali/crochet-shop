@@ -1,8 +1,10 @@
 body {
-    background-image: url('../image/voila.png'); /* Your small image */
-    background-repeat: repeat;          /* Repeat both x and y */
-    background-size: cover; /* Ensure the image covers the entire background */
-    background-position: top left;      /* Start repeating from top-left */
+    margin: 0;
+    background-image: url('../image/bg.png'); /* Your small image */
+    background-size: cover;         /* Make image cover the screen */
+    background-repeat: repeat-y;    /* Repeat vertically on scroll */
+    background-position: center;    /* Center the image */
+    background-attachment: scroll;     /* Start repeating from top-left */
 }
 #flash {
     transition: opacity 0.5s ease-in-out;

@@ -71,7 +71,7 @@
 
                             <p class="card-text text-muted">{{ product.description|slice(0, 100) ~ '...' }}</p>
                             <p class="card-text">
-                                <strong>Prix:</strong> {{ product.price}} DT<br>
+                                <strong>{{ product.price}} DT<br> </strong>
                             </p>
                             {% if product.quantity > 5 %}
                                 <p class="card-text stock-ok">En Stock</p>
@@ -152,7 +152,7 @@
 
             function updateFavorisCount() {
                 const count = document.querySelectorAll('.favorite-icon.active').length;
-                document.querySelector('.badge').textContent = `${count} produit${count !== 1 ? 's' : ''}`;
+                document.querySelector('.badge').textContent = `${count} produit${count !== 0.5 ? 's' : ''}`;
 
                 if (count === 0) {
                     document.querySelector('.row').innerHTML = `

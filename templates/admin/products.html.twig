@@ -7,11 +7,12 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Product Management</h1>
-    <a href="{{ path('admin_product_new') }}" class="btn btn-add mb-3">Add Product</a>
+    <h1>Gestionnaire des produits</h1>
+    <a href="{{ path('admin_product_new') }}" class="btn btn-add mb-3">Ajouter un produit</a>
     <a href="{{ path('app_order_topselledAdmin',{'limit':10}) }}" class="btn btn-add mb-3">Voir les top ventes</a>
     <a href="{{ path('app_clients') }}" class="btn btn-add mb-3">Voir mes clients</a>
     <a href="{{ path('ajout_coupon') }}" class="btn btn-add mb-3">Ajout coupon</a>
+    <a href="{{ path('admin_reviews') }}" class="btn btn-add mb-3">Avis Clients</a>
 
     <div class="row">
         <a href="{{ path('admin_carousel_upload') }}" class="btn btn-secondary mb-3">Ajouter Image au Carrousel</a>

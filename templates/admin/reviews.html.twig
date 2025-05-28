@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Avis{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <h1 class="mb-4">Avis des utilisateurs</h1>
+
+        <form method="post" action="{{ path('review_delete_all') }}" onsubmit="return confirm('Voulez-vous vraiment supprimer tous les avis ?');" class="mb-4 text-end">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_all') }}">
+            <button class="btn btn-danger">
+
+                Vider tous les avis <i class="fas fa-trash-alt ms-1"></i>
+            </button>
+        </form>
+
+        {% for review in reviews %}
+            <div class="card mb-3 p-3 position-relative" style="background-color: #ffe6f0;">
+                <strong>{{ review.name }}</strong> ({{ review.email }})<br>
+                <small>{{ review.createdAt|date('d/m/Y H:i') }}</small>
+                <p class="mt-2">{{ review.message }}</p>
+
+                <form method="post" action="{{ path('review_delete', {'id': review.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cet avis ?');" class="position-absolute top-0 end-0 m-3">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ review.id) }}">
+                    <button class="btn btn-sm btn-danger" title="Supprimer cet avis" type="submit">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <h4><strong>Aucun avis pour le moment.</strong></h4>
+        {% endfor %}
+
+    </div>
+{% endblock %}

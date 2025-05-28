@@ -9,9 +9,9 @@ use App\Entity\ImageCarousel;
 use App\Entity\User;
 use App\Form\AddCouponFormType;
 use App\Form\ProductType;
-use App\Form\ImageCarouselForm;
 use App\Form\ImageCarouselTypeForm;
 use App\Repository\ProductRepository;
+use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,6 +55,15 @@ class AdminController extends AbstractController
         }
 
         return $this->render('admin/new.html.twig', ['form' => $form->createView()]);
+    }
+    #[Route('/reviews', name: 'admin_reviews')]
+    public function showReviews(ReviewRepository $reviewRepo): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $reviews = $reviewRepo->findBy([], ['createdAt' => 'DESC']);
+        return $this->render('admin/reviews.html.twig', [
+            'reviews' => $reviews,
+        ]);
     }
 
     #[Route('/{id}/edit', name: 'admin_product_edit')]
@@ -186,6 +195,42 @@ class AdminController extends AbstractController
         });
         return $this->render('admin/nosClients.html.twig', ['clients'=>$clients]);
     }
+    #[Route('/reviews/delete/{id}', name: 'review_delete', methods: ['POST'])]
+    public function deleterev($id, Request $request, EntityManagerInterface $em, ReviewRepository $reviewRepository): Response
+    {
+        $review = $reviewRepository->find($id);
+        if (!$review) {
+            $this->addFlash('error', 'Avis non trouvé.');
+            return $this->redirectToRoute('admin_reviews');
+        }
 
+        if ($this->isCsrfTokenValid('delete'.$id, $request->request->get('_token'))) {
+            $em->remove($review);
+            $em->flush();
+            $this->addFlash('success', 'Avis supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide.');
+        }
 
+        return $this->redirectToRoute('admin_reviews');
+    }
+
+    #[Route('/reviews/delete_all', name: 'review_delete_all', methods: ['POST'])]
+    public function deleteAll(Request $request, EntityManagerInterface $em, ReviewRepository $reviewRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete_all', $request->request->get('_token'))) {
+            $reviews = $reviewRepository->findAll();
+
+            foreach ($reviews as $review) {
+                $em->remove($review);
+            }
+            $em->flush();
+
+            $this->addFlash('success', 'Tous les avis ont été supprimés.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide.');
+        }
+
+        return $this->redirectToRoute('admin_reviews');
+    }
 }
