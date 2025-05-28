@@ -3,8 +3,6 @@
 {% block title %}Order{% endblock %}
 
 {% block body %}
-    <h1>Order</h1>
-
     <table class="table">
         <tbody>
             <tr>
@@ -21,7 +19,15 @@
             </tr>
             <tr>
                 <th>Etat</th>
-                <td>{{ order.status }}</td>
+                <td>
+                    {% if order.status == 'canceled' %}
+                        annulée
+                    {% elseif order.status == 'pending' %}
+                        en attente
+                    {% else %}
+                        payée
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Téléphone</th>
@@ -38,5 +44,32 @@
         </tbody>
     </table>
 
+
     <a href="{{ path('app_order_index') }}" class="btn ">Retournez à la liste</a>
+    <h4 class="mt-4">Produits commandés :</h4>
+
+    {% for item in order.orderDetails %}
+        <div class="list-group-item py-4 px-3 mb-3 shadow-sm rounded d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+            <div class="d-flex align-items-center mb-3 mb-md-0">
+                <img src="{{ asset('uploads/products/' ~ item.product.imageName) }}" alt="{{ item.product.name }}" class="me-4 rounded shadow-sm border" style="width: 100px; height: 100px; object-fit: cover;">
+
+                <div>
+                    <h5 class="mb-1">
+                        <a href="{{ path('product_details', {id: item.product.id}) }}" class="text-decoration-none text-dark fw-bold" style="transition: color 0.3s;">
+                            {{ item.product.name }}
+                        </a>
+                    </h5>
+                    <p class="mb-1 text-muted small">
+                        Prix unitaire : <strong>{{ item.price|number_format(2, '.', ' ') }} DT</strong><br>
+                        Quantité : <strong>{{ item.quantity }}</strong>
+                    </p>
+                    <p class="mb-0 text-dark">Total :
+                        <strong>{{ (item.price * item.quantity)|number_format(2, '.', ' ') }} DT</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted">Aucun produit trouvé pour cette commande.</p>
+    {% endfor %}
 {% endblock %}

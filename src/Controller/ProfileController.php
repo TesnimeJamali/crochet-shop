@@ -53,6 +53,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profil/modifier', name: 'app_profile_edit')]
+    #[IsGranted('ROLE_USER')]
     public function edit(Request $request, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();

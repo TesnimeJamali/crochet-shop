@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
-{% block title %}Le Boutique{% endblock %}
+{% block title %}La Boutique{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 {% endblock %}
 {% block body %}
-    <h1>Our Crochet Products</h1>
+    <h1>Nos Produits</h1>
     <div class="row">
         {% for product in products %}
             <div class="col-md-3 mb-4">

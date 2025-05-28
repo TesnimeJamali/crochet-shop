@@ -8,12 +8,12 @@
 {% endblock %}
 
 {% block title %}
-    {{ product is defined ? 'Edit Product' : 'Add Product' }}
+    {{ product is defined ? 'Modifier Produit' : 'Ajouter Produit' }}
 {% endblock %}
 
 {% block body %}
     <div class="container mt-4">
-        <h1 class="mb-4">{{ product is defined ? 'Edit' : 'Add' }} Product</h1>
+        <h1 class="mb-4">{{ product is defined ? 'Modifier' : 'Ajouter' }} Produit</h1>
         {{ form_start(form, { attr: { enctype: 'multipart/form-data' } }) }}
 
         <div class="form-group">
@@ -33,7 +33,7 @@
             {# Display current image only if product has an image #}
             {% if product is defined and product.imageName %}
                 <div class="mb-3">
-                    <label>Current Image:</label><br>
+                    <label>Image Actuelle:</label><br>
                     <img src="{{ vich_uploader_asset(product, 'imageFile') }}"
                          alt="Product image"
                          class="img-thumbnail"
@@ -50,7 +50,7 @@
         </div>
 
         <button class="btn btn-edit mt-3">
-            {{ product is defined ? 'Update' : 'Create' }}
+            {{ product is defined ? 'Mettre à Jour' : 'Créer' }}
         </button>
         {{ form_end(form) }}
     </div>

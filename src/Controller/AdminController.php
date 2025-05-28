@@ -6,11 +6,13 @@ use App\Controller\ImageCarouselController;
 use App\Entity\Coupon;
 use App\Entity\Product;
 use App\Entity\ImageCarousel;
+use App\Entity\User;
 use App\Form\AddCouponFormType;
 use App\Form\ProductType;
 use App\Form\ImageCarouselForm;
 use App\Form\ImageCarouselTypeForm;
 use App\Repository\ProductRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -128,12 +130,11 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_carousel_upload');
         }
 
-        // ✅ Fetch all existing carousel images from DB
         $carouselImages = $repo->findAll();
 
         return $this->render('admin/carousel_upload.html.twig', [
             'form' => $form->createView(),
-            'carouselImages' => $carouselImages, // ✅ Pass list
+            'carouselImages' => $carouselImages,
         ]);
     }
     #[Route('/carousel/{id}/delete', name: 'admin_carousel_delete', methods: ['POST'])]
@@ -174,4 +175,17 @@ class AdminController extends AbstractController
 
         return $this->render('admin/coupon.html.twig', ['form' => $form->createView()]);
     }
+    #[Route('/clients', name: 'app_clients')]
+    public function nosClients(Request $request, UserRepository $userRepository): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $allUsers = $userRepository->findAll();
+
+        $clients = array_filter($allUsers, function(User $user) {
+            return in_array('ROLE_USER', $user->getRoles()) && count($user->getRoles()) === 1;
+        });
+        return $this->render('admin/nosClients.html.twig', ['clients'=>$clients]);
+    }
+
+
 }

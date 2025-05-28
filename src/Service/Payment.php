@@ -79,6 +79,14 @@ class Payment
 
     public function getCartDetails()
     {
+
+        $user=$this->security->getUser();
+        $discount=0;
+        if($user) {
+            $panier = $this->entityManager->getRepository(Cart::class)->findOneBy(['user' => $user->getId()]);
+            if($panier->getCoupon()!=null)
+            $discount+=$panier->getCoupon()->getDiscount();
+        }
         $products = $this->getProductsFromCart();
         $totalPanier = 0;
         $totalQuantity = 0;
@@ -86,7 +94,8 @@ class Payment
             $totalPanier += $item['produit']->getPrice() * $item['quantite'];
             $totalQuantity += $item['quantite'];
         }
-        return ['totalAmount' => $totalPanier, 'totalQuantity' => $totalQuantity, 'discount'=>20];
+
+        return ['totalAmount' => $totalPanier, 'totalQuantity' => $totalQuantity, 'discount'=>$discount];
     }
 
     public function handleAdressForm($addressF,Order $order,FormInterface $form){
@@ -138,6 +147,8 @@ class Payment
     public function stripePaymentMethod(Order $order,$discount){
 
         $products = $this->getProductsFromCart();
+        $cart= $this->getCartDetails();
+        $discount=(float)$cart["discount"];
         foreach($products as $product){
             $line_items[]=[
                 'price_data' => [
@@ -152,7 +163,7 @@ class Payment
             ];
 
         }
-        return $this->stripePayment->startPayment($line_items,$order);
+        return $this->stripePayment->startPayment($line_items,$order,$discount);
 
     }
 
@@ -190,14 +201,10 @@ class Payment
                     $order->setPaymentIntent($session->payment_intent);
                     $this->entityManager->flush();
 
-                    return "Order added to the database and set to pending.";
                 } else {
                     return $session;
                 }
             }
-
-            return "oupss  session";
-
         }
         elseif ($event->type=='payment_intent.succeeded'){
             $paymentIntent = $event->data->object;
@@ -209,10 +216,7 @@ class Payment
                 $order->setStatus('paid');
                 $this->entityManager->flush();
                 //decremante the stock
-                return "order updated ans set to paid";
             }
-
-            return "oups payment";
 
         }
     }

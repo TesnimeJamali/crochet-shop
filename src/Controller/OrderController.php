@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/order')]
 final class OrderController extends AbstractController
@@ -60,6 +61,7 @@ final class OrderController extends AbstractController
         ]);
     }
 
+    #[isGranted('ROLE_ADMIN')]
     #[Route('/topSelledAdmin',name: 'app_order_topselledAdmin', methods: ['GET'])]
     public function topSelledAdmin(OrderDetailRepository $orderDetailRepository,Request $request): Response
     {
@@ -70,6 +72,19 @@ final class OrderController extends AbstractController
             'products' => $products,
             'current_limit' => $limit
         ]);
+    }
+
+    #[Route('/annulerCmd/{order}' , name: 'app_annuler_cmd')]
+    public function annulerCmd(Order $order,EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if ($order) {
+            $order->setStatus('canceled');
+            $entityManager->persist($order);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_order_index');
     }
 
 
@@ -87,7 +102,7 @@ final class OrderController extends AbstractController
     {
         $body = $request->getContent();
         $header = $request->headers->get('stripe-signature');
-        $res=$payment->stripeCheckout($header,$body);
+        $payment->stripeCheckout($header,$body);
         return new Response('Webhook handled', Response::HTTP_OK);
 
     }
