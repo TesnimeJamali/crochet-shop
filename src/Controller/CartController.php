@@ -106,6 +106,7 @@ final class CartController extends AbstractController
             'coupon' => $coupon,
             'discount' => $discount,
             'totalAfterDiscount' => $totalAvecReduction,
+
         ]);
     }
 
@@ -297,14 +298,31 @@ final class CartController extends AbstractController
         }
     }
     #[Route('/cart/apply-coupon', name: 'apply_coupon', methods: ['POST'])]
-    public function applyCoupon(Request $request, EntityManagerInterface $em): \Symfony\Component\HttpFoundation\RedirectResponse
-    {
+    public function applyCoupon(Request $request, EntityManagerInterface $em ,Security $security): \Symfony\Component\HttpFoundation\RedirectResponse
+    {   $user = $security->getUser();
+        if ($user) {
+            $cart = $user->getCart();
+            if ($cart) {
+                $couponuser=$cart->getCoupon();
+            }
+            if($couponuser !== null){
+                $this->addFlash('danger', 'Vous ne pouvez appliquer qu’un seul coupon !');
+                return $this->redirectToRoute('app_cart');
+            }
+        }
+        else{
+            $session = $request->getSession();
+            if ($session->has('coupon')) {
+                $this->addFlash('danger', 'Vous ne pouvez appliquer qu’un seul coupon !');
+                return $this->redirectToRoute('app_cart');
+            }
+        }
         $code = $request->request->get('code');
         $coupon = $em->getRepository(Coupon::class)->findOneBy(['code' => $code]);
         if (!$coupon || !$coupon->isValid()) {
-            $this->addFlash('coupon_error', 'Ce code promo est invalide ou expiré.');
+            $this->addFlash('danger', 'Ce code promo est invalide ou expiré.');
         } else {
-            $this->addFlash('coupon_success', 'Code promo appliqué : -' . $coupon->getDiscount() . '%');
+            $this->addFlash('success', 'Code promo appliqué : -' . $coupon->getDiscount() . '%');
             $session = $request->getSession();
             $session->set('coupon', $coupon->getId());
         }
