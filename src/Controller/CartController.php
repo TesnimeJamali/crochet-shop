@@ -265,7 +265,7 @@ final class CartController extends AbstractController
             $em->persist($alerte);
             $em->flush();
             $this->addFlash('success', 'Vous serez averti dès que le produit est à nouveau en stock.');
-            return $this->redirectToRoute('app_cart');
+            return $this->redirect($request->headers->get('referer'));
         }
         return $this->render('cart/alerte.html.twig', [
             'form' => $form->createView(),
