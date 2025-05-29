@@ -87,6 +87,9 @@ class Payment
             if($panier->getCoupon()!=null)
             $discount+=$panier->getCoupon()->getDiscount();
         }
+        else{
+            $discount=$this->session->get('coupon');
+        }
         $products = $this->getProductsFromCart();
         $totalPanier = 0;
         $totalQuantity = 0;
@@ -95,7 +98,7 @@ class Payment
             $totalQuantity += $item['quantite'];
         }
 
-        return ['totalAmount' => $totalPanier, 'totalQuantity' => $totalQuantity, 'discount'=>$discount];
+        return ['totalAmount' => $totalPanier, 'totalQuantity' => $totalQuantity, 'discount'=>(float)$discount*$totalPanier/100];
     }
 
     public function handleAdressForm($addressF,Order $order,FormInterface $form){
