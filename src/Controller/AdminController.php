@@ -3,6 +3,7 @@ namespace App\Controller;
 
 
 use App\Controller\ImageCarouselController;
+use App\Entity\Cart;
 use App\Entity\Coupon;
 use App\Entity\Product;
 use App\Entity\ImageCarousel;
@@ -184,6 +185,30 @@ class AdminController extends AbstractController
 
         return $this->render('admin/coupon.html.twig', ['form' => $form->createView()]);
     }
+    #[Route('/admin/coupon/delete', name: 'admin_coupon_delete')]
+    public function deleteByCode(Request $request, EntityManagerInterface $em): Response
+    {
+        $code = $request->query->get('code');
+        if ($code) {
+            $coupon = $em->getRepository(Coupon::class)->findOneBy(['code' => $code]);
+            if (!$coupon) {
+                $this->addFlash('erreurcoupon', "Aucun coupon trouvé avec le code '$code'.");
+            } else {
+                $usedInCarts = $em->getRepository(Cart::class)->count(['coupon' => $coupon]);
+                if ($usedInCarts > 0) {
+                    $this->addFlash('erreurcoupon', "Impossible de supprimer : ce coupon est utilisé dans $usedInCarts panier(s).");
+                } else {
+                    $em->remove($coupon);
+                    $em->flush();
+                    $this->addFlash('suppressioncoupon', "Le coupon '$code' a été supprimé avec succès.");
+                }
+            }
+            return $this->redirectToRoute('admin_coupon_delete');
+        }
+        return $this->render('admin/coupon/delete.html.twig');
+    }
+
+
     #[Route('/clients', name: 'app_clients')]
     public function nosClients(Request $request, UserRepository $userRepository): Response
     {

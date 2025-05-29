@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Supprimer un coupon{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4" style="background-color: #fefefe;">
+                    <div class="card-header text-center py-3 rounded-top-4" style="background-color: #e3f3f8;">
+                        <h3 class="fw-light mb-0" style="color: #5a6d80;">
+                            <i class="fas fa-trash-alt me-2" style="color: #8bc1d4;"></i>
+                            Supprimer un coupon
+                        </h3>
+                    </div>
+                    <div class="card-body px-4 py-4">
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success small py-2 px-3 rounded-3" style="background-color: #d0f0fd; color: #31708f;">
+                                <i class="fas fa-check-circle me-1"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger small py-2 px-3 rounded-3" style="background-color: #fbdede; color: #a94442;">
+                                <i class="fas fa-exclamation-triangle me-1"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                        <form method="get" action="{{ path('admin_coupon_delete') }}" novalidate>
+                            <div class="mb-4">
+                                <label for="code" class="form-label fw-semibold" style="color: #5a6d80;">Code du coupon à supprimer</label>
+                                <input type="text" id="code" name="code" class="form-control shadow-sm"
+                                       placeholder="Ex : GLRT20"
+                                       style="border-color: #8bc1d4; background-color: #f7fbfd; color: #4a5b6d;"
+                                       required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold"
+                                        style="border-color: #8bc1d4; color: #5a6d80; background-color: #fff;">
+                                    <i class="fas fa-trash-alt me-2"></i> Supprimer le coupon
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        body {
+            background-color: #f4f9fb;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #4a5b6d;
+        }
+
+        .card {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-outline-secondary {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #d0f0fd;
+            color: #31708f;
+            border-color: #5a9cc8;
+        }
+
+        input.form-control:focus {
+            border-color: #8bc1d4;
+            box-shadow: 0 0 8px #a8d0e6;
+            background-color: #f0f9fc;
+            color: #3a4e60;
+        }
+    </style>
+{% endblock %}

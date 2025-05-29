@@ -106,13 +106,21 @@
     <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
         {% for label, messages in app.flashes %}
             {% for message in messages %}
-                <a href="{{ path('app_cart') }}" class="text-decoration-none">
-                    <div id="flash" class="alert alert-dismissible shadow-sm border border-secondary"
+                {% if label != 'suppressioncoupon' and label != 'erreurcoupon' %}
+                    <a href="{{ path('app_cart') }}" class="text-decoration-none">
+                         <div id="flash" class="alert alert-dismissible shadow-sm border border-secondary"
                          style="background-color: white; color: black; min-width: 300px; cursor: pointer;">
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </a>
+                {% else %}
+                    <div class="alert alert-dismissible shadow-sm border border-secondary " id="flash"
+                         style="background-color: white; color: black; min-width: 300px; cursor: pointer;">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
             {% endfor %}
         {% endfor %}
     </div>
