@@ -112,13 +112,13 @@ class Payment
     }
     public function lastTouches(Order $order,$step,$form){
         $cart=$this->getCartDetails();
-        $shipping=20;
+        $shipping=7;
         $valur=(float)$cart["totalAmount"]+$shipping-(float)$cart["discount"];
         $exemple = [
             'items' => [
                 [
                     'label' => "Sous-total (".$cart["totalQuantity"]." articles)",
-                    'value' => "".$cart["totalAmount"]." TND",
+                    'value' => "".$cart["totalAmount"]." DT",
                 ],
                 [
                     'label' => 'Livraison',

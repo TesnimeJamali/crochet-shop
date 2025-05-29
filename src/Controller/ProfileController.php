@@ -62,7 +62,7 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
             $this->addFlash('success', 'Votre profil est mis à jour.');
-            return $this->redirectToRoute('app_profile_edit');
+            return $this->redirectToRoute('app_profile');
         }
         return $this->render('profile/edit.html.twig', [
             'form' => $form->createView(),

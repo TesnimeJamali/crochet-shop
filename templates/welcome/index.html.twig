@@ -85,10 +85,18 @@
                                 <a href="{{ path('add', {'id': product.id}) }}" class="btn custom-cart-btn">
                                     <i class="fas fa-cart-plus me-1"></i> Ajouter
                                 </a>
-                                <a href="#" class="favorite-icon ms-2 {{ app.user and product in app.user.favoris ? 'active' : '' }}"
-                                   data-product-id="{{ product.id }}">
-                                    <i class="fa-heart {{ app.user and product in app.user.favoris ? 'fa-solid' : 'fa-regular' }}"></i>
-                                </a>
+                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                    <a href="#" class="favorite-icon favorite-icon2 ms-2 {{ app.user and product in app.user.favoris ? 'active' : '' }}"
+                                       data-product-id="{{ product.id }}">
+                                        <i class="fa-heart {{ app.user and product in app.user.favoris ? 'fa-solid' : 'fa-regular' }}"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('app_login')}} " class="favorite-icon ms-2 {{ app.user and product in app.user.favoris ? 'active' : '' }}"
+                                       data-product-id="{{ product.id }}">
+                                        <i class="fa-heart {{ app.user and product in app.user.favoris ? 'fa-solid' : 'fa-regular' }}"></i>
+                                    </a>
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>
@@ -102,9 +110,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('click', async function(e) {
-                if (e.target.closest('.favorite-icon')) {
+                if (e.target.closest('.favorite-icon2')) {
                     e.preventDefault();
-                    const icon = e.target.closest('.favorite-icon');
+                    const icon = e.target.closest('.favorite-icon2');
                     const productId = icon.dataset.productId;
                     const heartIcon = icon.querySelector('i');
 
