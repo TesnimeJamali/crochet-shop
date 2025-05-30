@@ -6,6 +6,7 @@ use App\Entity\Cart;
 use App\Entity\Coupon;
 use App\Entity\Order;
 use App\Entity\OrderDetail;
+use App\Entity\Product;
 use App\Entity\User;
 use App\Form\AdressForm;
 use App\Form\ConfirmAddressForm;
@@ -218,12 +219,29 @@ class Payment
             if ($order) {
                 $order->setStatus('paid');
                 $this->entityManager->flush();
-                //decremante the stock
+                $this->gererStock($order);
             }
+
 
         }
     }
 
+    public function gererStock(Order $order){
+        $orderItems=$order->getOrderDetails();
+        foreach ($orderItems as $item){
+            $OQuantity=$item->getQuantity();
+            $OProduct=$this->entityManager->getRepository(Product::class)->findOneBy(['id' => $item->getProduct()->getId()]);
+            if($OQuantity>$OProduct->getQuantity()){
+                //send an email
+                $OProduct->setQuantity(0);
+            }
+            else{
+                $OProduct->setQuantity($OProduct->getQuantity()-$OQuantity);
+            }
+            $this->entityManager->persist($OProduct);
+            $this->entityManager->flush();
+        }
+    }
     public function addingToBDD($orderSession){
         $order=$orderSession;
         $products = $this->getProductsFromCart();

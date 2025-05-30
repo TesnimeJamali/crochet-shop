@@ -5,15 +5,18 @@ namespace App\Controller;
 use App\Controller\ImageCarouselController;
 use App\Entity\Cart;
 use App\Entity\Coupon;
+use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\ImageCarousel;
 use App\Entity\User;
 use App\Form\AddCouponFormType;
 use App\Form\ProductType;
 use App\Form\ImageCarouselTypeForm;
+use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
+use App\Service\Payment;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -219,6 +222,44 @@ class AdminController extends AbstractController
             return in_array('ROLE_USER', $user->getRoles()) && count($user->getRoles()) === 1;
         });
         return $this->render('admin/nosClients.html.twig', ['clients'=>$clients]);
+    }
+    #[Route('/OrdersValidat', name: 'app_orders_admin')]
+    public function OrdersValidation(OrderRepository $orderRepository): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $orders = $orderRepository->findBy(['status' => 'pending', 'paymentMethod'=>'cash'], ['createdAt' => 'ASC']);
+        return $this->render('order/ordersTableValid.html.twig', [
+            'orders' => $orders
+        ]);
+
+    }
+    #[Route('/annulerCmdAdmin/{order}' , name: 'app_annuler_cmd_admin')]
+    public function annulerCmd(Order $order,EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+
+        if ($order) {
+            $order->setStatus('canceled');
+            $entityManager->persist($order);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_orders_admin');
+    }
+
+    #[Route('/validerCmdAdmin/{order}' , name: 'app_valider_cmd_admin')]
+    public function validerCmd(Order $order,EntityManagerInterface $entityManager,Payment $payment): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+
+        if ($order) {
+            $order->setStatus('paid');
+            $entityManager->persist($order);
+            $entityManager->flush();
+            $payment->gererStock($order);
+        }
+        return $this->redirectToRoute('app_orders_admin');
     }
     #[Route('/reviews/delete/{id}', name: 'review_delete', methods: ['POST'])]
     public function deleterev($id, Request $request, EntityManagerInterface $em, ReviewRepository $reviewRepository): Response
