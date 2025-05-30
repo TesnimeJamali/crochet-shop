@@ -76,14 +76,15 @@ final class CartController extends AbstractController
                 }
             }
         }
-        $couponId = $session->get('coupon');
-        if ($couponId) {
-            $coupon = $couponRepository->find($couponId);
-        }
-        if ($user && $coupon) {
-            $cart->setCoupon($coupon);
-            $em->persist($cart);
-            $em->flush();
+        if ($user) {
+            $coupon = $cart?->getCoupon();
+            if (!$coupon) {
+                $couponId = $session->get('coupon');
+                $coupon = $couponId ? $couponRepository->find($couponId) : null;
+            }
+        } else {
+            $couponId = $session->get('coupon');
+            $coupon = $couponId ? $couponRepository->find($couponId) : null;
         }
         $totalAvecReduction = $total;
         if ($coupon) {

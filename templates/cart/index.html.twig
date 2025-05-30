@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    {% if item.produit.quantity == 0 %}
+                    {% if item.produit.quantity <item.quantite %}
                 <div class="alert mt-3 text-center" style="background-color: #e6f0ff; border-color: #cce0ff; color: #003366;">
                 <p class="fs-5 mb-3" style="font-weight: 500;">
                 Le produit <strong>"{{ item.produit.name }}"</strong> n’est plus en stock.
